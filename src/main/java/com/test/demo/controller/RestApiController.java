@@ -31,7 +31,7 @@ class RestApiController {
 
     @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
     public void insertMember(User user){
-        User user1 = new User();
+        User user2 = new User(); // 이거 아닌가..?
         userService.insertUser(user); // 왜 값을 못받아오니..
     }
 
