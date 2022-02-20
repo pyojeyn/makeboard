@@ -9,9 +9,9 @@ import java.util.List;
 
 
 // DAO ?
-//@Repository
+// @Repository
 @Mapper  // 이거 안하면 UserMapper Class 지정받아서 SqlSession? 이거 주입받고 SelectOne이나 SelectList 사용해야 하나?
 public interface UserMapper {
      List<User> selectUserList(User user);
-     void insertUser(User user);
+     User insertUser(User user);
 }

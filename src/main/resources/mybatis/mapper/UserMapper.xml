@@ -5,9 +5,9 @@
 
 <mapper namespace="com.test.demo.mapper.UserMapper">
 
-    <insert id="insertUser">
-        insert into user(user_id,user_pw,user_email) values
-            (#{user_id},#{user_pw},#{user_nkname})
+    <insert id="insertUser" parameterType="com.test.demo.vo.User">
+        insert into User(user_id,user_pw,user_nkname) values(#{userId},#{userPw},#{userNkname});
+
     </insert>
 
 </mapper>
