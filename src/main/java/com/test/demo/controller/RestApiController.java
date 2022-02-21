@@ -83,11 +83,11 @@ class RestApiController {
            // System.out.println("세션으로 얻은 아이디값 : " + id); // Ok
 
             //user = userService.selectOne(id);
-            mav.addObject("id",user.getId());
-            mav.addObject("userId", user.getUserId());
-            mav.addObject("userNkname", user.getUserNkname());
+//            mav.addObject("id",user.getId());
+//            mav.addObject("userId", user.getUserId());
+//            mav.addObject("userNkname", user.getUserNkname());
 
-
+                mav.addObject("member", user);
 
 
             return mav;
@@ -103,7 +103,7 @@ class RestApiController {
         }
 
         // 정보수정.. 일단 하나 select 한 다음에 하자.
-        @RequestMapping(value = "/updateMember")
+        @RequestMapping(value = "/updateMember", method = RequestMethod.POST)
         public ModelAndView udpateMember(HttpSession session,User user2) throws Exception{
             ModelAndView mav = new ModelAndView("myprofile");
 
@@ -114,6 +114,9 @@ class RestApiController {
 
             userService.updateUser(user2);
             System.out.println("userId : " + user.getUserId());
+
+            // 수정하고 값 넘겨줘야함 객체(USER) 를 넘겨줌
+            mav.addObject("member", user2);
 
             return mav;// 왜 값을 못받아오니..
         }

@@ -20,8 +20,12 @@
           AND user_pw = #{userPw}
     </select>
 
+    <!--
+        $ 사용시 '' 로 묶어주기
+    -->
+
     <update id="updateUser" parameterType="com.test.demo.vo.User">
-        UPDATE user SET user_id=#{userId},user_nkname=#{userNkname} WHERE id = #{id}
+        UPDATE user SET user_id='${userId}',user_nkname='${userNkname}' WHERE id = '${id}'
     </update>
 
     <select id="selectOne" resultType="com.test.demo.vo.User">
