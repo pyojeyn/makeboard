@@ -25,14 +25,16 @@ class RestApiController {
     private final UserServiceImpl userService;
 
 
+
     public RestApiController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
     @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
-    public void insertMember(User user){
-        User user2 = new User(); // 이거 아닌가..?
-        userService.insertUser(user); // 왜 값을 못받아오니..
+    public int insertMember(User user) throws Exception{
+        System.out.println("Id : " + user.getUserId());
+
+       return userService.insertUser(user); // 왜 값을 못받아오니..
     }
 
     /*

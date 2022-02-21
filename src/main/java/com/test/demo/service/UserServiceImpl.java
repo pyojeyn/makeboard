@@ -4,6 +4,7 @@ package com.test.demo.service;
 import com.test.demo.mapper.UserMapper;
 import com.test.demo.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -22,15 +23,16 @@ public class UserServiceImpl implements UserService{
         this.userMapper = userMapper;
     }
 
-    @Override
-    public List<User> selectUserList(User user) {
-        return userMapper.selectUserList(user);
-    }
+//    @Override
+//    public List<User> selectUserList(User user) {
+//        return userMapper.selectUserList(user);
+//    }
 
     @Override
-    public void insertUser(User user) {
-        System.out.println("왜 안되!");
-         userMapper.insertUser(user);
+    public int insertUser(User user) throws Exception {
+
+         System.out.println("왜 안되!");
+         return userMapper.insertUser(user);
     }
 
 
