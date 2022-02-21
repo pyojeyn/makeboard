@@ -30,9 +30,22 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public int insertUser(User user) throws Exception {
-
-         System.out.println("왜 안되!");
          return userMapper.insertUser(user);
+    }
+
+    @Override
+    public User login(User user) throws Exception {
+        return userMapper.login(user);
+    }
+
+    @Override
+    public int updateUser(User user) throws Exception {
+        return userMapper.updateUser(user);
+    }
+
+    @Override
+    public User selectOne(int id) throws Exception {
+        return userMapper.selectOne(id);
     }
 
 

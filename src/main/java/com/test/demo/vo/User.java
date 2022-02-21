@@ -63,4 +63,15 @@ public class User {
     public void setUserRegdate(LocalDate userRegdate) {
         this.userRegdate = userRegdate;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", userPw='" + userPw + '\'' +
+                ", userNkname='" + userNkname + '\'' +
+                ", userRegdate=" + userRegdate +
+                '}';
+    }
 }

@@ -11,4 +11,7 @@ public interface UserService {
 
     //List<User> selectUserList(User user);
     int insertUser(User user) throws Exception;
+    User login(User user) throws Exception;
+    int updateUser(User user) throws Exception;
+    User selectOne(int id) throws Exception;
 }

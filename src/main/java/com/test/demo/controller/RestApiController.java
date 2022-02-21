@@ -4,9 +4,15 @@ import com.test.demo.service.UserService;
 import com.test.demo.service.UserServiceImpl;
 import com.test.demo.vo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 
 
 /*
@@ -24,37 +30,96 @@ class RestApiController {
     @Autowired
     private final UserServiceImpl userService;
 
-
-
     public RestApiController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
     @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
     public int insertMember(User user) throws Exception{
-        System.out.println("Id : " + user.getUserId());
+        System.out.println("userId : " + user.getUserId());
+        System.out.println("id : " + user.getId());
 
        return userService.insertUser(user); // 왜 값을 못받아오니..
     }
 
-    /*
-        // 새로운 회원 삽입하기
-	@Override
-	public ModelAndView addMember(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setCharacterEncoding("utf-8");
-		MemberVO memberVO = new MemberVO();
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView login(User user, HttpSession session, Model model) throws Exception {
 
-		// 회원 가입창에서 전송된 회원 정보를 bind() 메소드를 이용해 memberVO 해당 속성에 자동으로 설정
-		bind(request, memberVO);
+        ModelAndView mav = new ModelAndView("main");
 
-		int result = 0;
-		result = memberService.addMember(memberVO);
-		// 회원정보 추가 후 ModelAndView 클ㄹ스의 redirect 속성을 이용
-		// /member/listMembers.do로 리다이렉트 한다
-		ModelAndView mav = new ModelAndView("redirect:/member/listMembers.do");
+        User login = userService.login(user);
 
-		return mav;
-	}
+        if (login == null) {
+            session.setAttribute("member", null);
+            System.out.println("로그인 실패");
+        } else {
+            System.out.println(user.getId());
+            session.setAttribute("member", login);
+//            model.addAttribute("member",login);
+//            mav.addObject("member",login);
 
-    * */
-}
+            mav.addObject("userId", login.getUserId());
+            mav.addObject("userNkname", login.getUserNkname());
+
+            session.setAttribute("id",login.getId());
+            session.setAttribute("userId", login.getUserId());
+            session.setAttribute("userNkname", login.getUserNkname());
+
+            System.out.println("로그인 성공");
+            System.out.println(login);
+        }
+
+            return mav;
+        }
+
+        // 회원하나 조회해서 관련 데이터 뿌려줘야함?
+        @RequestMapping(value = "/selectOne",method = RequestMethod.GET)
+        public ModelAndView selectOne(HttpSession session) throws Exception {
+            ModelAndView mav = new ModelAndView("myprofile");
+
+            User user = (User) session.getAttribute("member");
+            //int id = user.getId();
+
+           // System.out.println("세션으로 얻은 아이디값 : " + id); // Ok
+
+            //user = userService.selectOne(id);
+            mav.addObject("id",user.getId());
+            mav.addObject("userId", user.getUserId());
+            mav.addObject("userNkname", user.getUserNkname());
+
+
+
+
+            return mav;
+
+        }
+
+        @RequestMapping(value = "/logout")
+        public ModelAndView logout(HttpSession session) {
+            session.invalidate();
+            ModelAndView mv = new ModelAndView("redirect:/");
+            System.out.println("로그아웃됨!");
+            return mv;
+        }
+
+        // 정보수정.. 일단 하나 select 한 다음에 하자.
+        @RequestMapping(value = "/updateMember")
+        public ModelAndView udpateMember(HttpSession session,User user2) throws Exception{
+            ModelAndView mav = new ModelAndView("myprofile");
+
+            User user = (User) session.getAttribute("member");
+            int id = user.getId();
+
+            System.out.println("새로 바꾼 닉네임 : " + user2.getUserNkname());
+
+            userService.updateUser(user2);
+            System.out.println("userId : " + user.getUserId());
+
+            return mav;// 왜 값을 못받아오니..
+        }
+
+
+    }
+
+
+

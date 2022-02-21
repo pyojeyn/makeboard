@@ -6,9 +6,26 @@
 <mapper namespace="com.test.demo.mapper.UserMapper">
 
     <insert id="insertUser" parameterType="com.test.demo.vo.User">
+<!--        <selectKey resultType="int" keyProperty="id" order="AFTER">-->
+<!--            SELECT LAST_INSERT_ID()-->
+<!--        </selectKey>-->
         insert into User(user_id,user_pw,user_nkname) values(#{userId},#{userPw},#{userNkname});
 
     </insert>
 
+    <select id="login" resultType="com.test.demo.vo.User">
+        SELECT id,user_id, user_pw, user_nkname
+        FROM user
+        WHERE user_id = #{userId}
+          AND user_pw = #{userPw}
+    </select>
+
+    <update id="updateUser" parameterType="com.test.demo.vo.User">
+        UPDATE user SET user_id=#{userId},user_nkname=#{userNkname} WHERE id = #{id}
+    </update>
+
+    <select id="selectOne" resultType="com.test.demo.vo.User">
+        SELECT id, user_id, user_pw, user_nkname FROM user WHERE user_id = #{userId}
+    </select>
 </mapper>
 

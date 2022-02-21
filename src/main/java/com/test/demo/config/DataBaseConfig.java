@@ -6,15 +6,18 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Configuration
 @MapperScan(basePackages = {"com.test.demo.mapper"})
@@ -59,6 +62,13 @@ public class DataBaseConfig{
     @Bean
     public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory){
         return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    @Bean
+    public FilterRegistrationBean hiddenHttpMethodFilter(){
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new HiddenHttpMethodFilter());
+        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
+        return filterRegistrationBean;
     }
 
 

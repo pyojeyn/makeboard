@@ -1,0 +1,60 @@
+<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
+<!--&lt;!&ndash;<html>&ndash;&gt;-->
+<!--&lt;!&ndash;<head>&ndash;&gt;-->
+<!--&lt;!&ndash;    <meta charset="UTF-8">&ndash;&gt;-->
+<!--&lt;!&ndash;    <title>Insert title here</title>&ndash;&gt;-->
+<!--&lt;!&ndash;</head>&ndash;&gt;-->
+<!--&lt;!&ndash;<body>&ndash;&gt;-->
+<!--&lt;!&ndash;<h1>Hello, Thymeleaf</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;</body>&ndash;&gt;-->
+<!--&lt;!&ndash;</html>&ndash;&gt;-->
+
+<!--<!DOCTYPE html>-->
+<!--<html xmls:th="http://www.thymeleaf.org" xmlns:xmls="http://www.w3.org/1999/xhtml">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>회원가입쓰</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>회원가입</h2>-->
+<!--<form method="post" action="/insertMember">-->
+<!--    <div class="Id">-->
+<!--        <input name="userId" type="text"  placeholder="아이디를 입력해 주세요.">-->
+<!--    </div>-->
+<!--    <div class="Nkname">-->
+<!--        <input name="userNkname"  type="text" placeholder="이름을 입력해 주세요.">-->
+<!--    </div>-->
+<!--    <div class="password">-->
+<!--        <input name="userPw"  type="password" placeholder="비밀번호를 입력해 주세요.">-->
+<!--    </div>-->
+<!--    <input type="submit">-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<form method="post" action="/insertMember">
+    <div class="container">
+        <h1>회원가입</h1>
+        <div class="form-group">
+            <label for="inputEmail4">userId</label>
+            <input type="text" class="form-control" id="inputEmail4" name="userId" placeholder="사용자 아이디">
+        </div>
+        <div class="form-group">
+            <label for="inputAddress">userName</label>
+            <input type="text" class="form-control" id="inputAddress" name="userNkname" placeholder="사용자 이름">
+        </div>
+        <div class="form-group">
+            <label for="inputPassword4">password</label>
+            <input type="password" class="form-control" id="inputPassword4" name="userPw" placeholder="사용자 비밀번호">
+        </div>
+        <button type="submit" class="btn btn-primary">가입 완료</button>
+    </div>
+</form>
+</body>
+</html>
