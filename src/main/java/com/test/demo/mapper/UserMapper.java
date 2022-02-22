@@ -20,4 +20,9 @@ public interface UserMapper {
      User selectOne(int id) throws Exception;
 
      int updateUser(User user) throws Exception;
+
+     int deleteUser(int id) throws Exception;
+
+     User checkUser(String userId) throws Exception;
+
 }

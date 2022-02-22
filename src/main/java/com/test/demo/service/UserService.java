@@ -13,5 +13,7 @@ public interface UserService {
     int insertUser(User user) throws Exception;
     User login(User user) throws Exception;
     int updateUser(User user) throws Exception;
+    User checkUser(String userId) throws Exception;
     User selectOne(int id) throws Exception;
+    int deleteUser(int id) throws Exception;
 }

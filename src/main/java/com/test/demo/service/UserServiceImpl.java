@@ -44,8 +44,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public User checkUser(String userId) throws Exception {
+        return userMapper.checkUser(userId);
+    }
+
+    @Override
     public User selectOne(int id) throws Exception {
         return userMapper.selectOne(id);
+    }
+
+    @Override
+    public int deleteUser(int id) throws Exception {
+        System.out.println("userServiceImpl : "+ id);
+        return userMapper.deleteUser(id);
     }
 
 

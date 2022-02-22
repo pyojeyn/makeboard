@@ -34,13 +34,47 @@ class RestApiController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
-    public int insertMember(User user) throws Exception{
-        System.out.println("userId : " + user.getUserId());
-        System.out.println("id : " + user.getId());
+//    @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
+//    public ModelAndView insertMember(User user, HttpSession session) throws Exception{
+//
+//        ModelAndView mav = new ModelAndView("main");
+//
+//        userService.insertUser(user);
+//
+//        System.out.println("userId : " + user.getUserId());
+//        System.out.println("id : " + user.getId());
+//
+//
+//
+//        mav.addObject("userId", user.getUserId());
+//        mav.addObject("userNkname", user.getUserNkname());
+//
+//        session.setAttribute("id",user.getId());
+//        session.setAttribute("userId", user.getUserId());
+//        session.setAttribute("userNkname", user.getUserNkname());
+//
+//       return  mav;// 왜 값을 못받아오니..
+//    }
 
-       return userService.insertUser(user); // 왜 값을 못받아오니..
+    @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
+    public ModelAndView insertMember(User user, HttpSession session) throws Exception{
+        ModelAndView mav = new ModelAndView("main");
+        System.out.println("insertMember.회원가입userId : " + user.getUserId());
+        System.out.println("insertMember.회원가입id : " + user.getId());
+
+        userService.insertUser(user);
+
+        User checkUser = userService.checkUser(user.getUserId());
+
+        session.setAttribute("member", checkUser);
+
+//        이거때매.. 내정보에서 오류남...
+        mav.addObject("id",checkUser.getId());
+        mav.addObject("userId", checkUser.getUserId());
+        mav.addObject("userNkname", checkUser.getUserNkname());
+        return mav;// 왜 값을 못받아오니..
     }
+
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView login(User user, HttpSession session, Model model) throws Exception {
@@ -72,27 +106,31 @@ class RestApiController {
             return mav;
         }
 
-        // 회원하나 조회해서 관련 데이터 뿌려줘야함?
-        @RequestMapping(value = "/selectOne",method = RequestMethod.GET)
-        public ModelAndView selectOne(HttpSession session) throws Exception {
-            ModelAndView mav = new ModelAndView("myprofile");
+        // 회원하나 조회해서 관련 데이터 뿌려줘야함?   @pathViriable
+    @RequestMapping(value = "/selectOne",method = RequestMethod.GET)
+    public ModelAndView selectOne(HttpSession session) throws Exception {
+        ModelAndView mav = new ModelAndView("myprofile");
 
-            User user = (User) session.getAttribute("member");
-            //int id = user.getId();
+        User user = (User) session.getAttribute("member");
+        int id = user.getId(); // ==> 0
+//        String userId = user.getUserId();
 
-           // System.out.println("세션으로 얻은 아이디값 : " + id); // Ok
+        // System.out.println("세션으로 얻은 아이디값 : " + id); // Ok
 
-            //user = userService.selectOne(id);
-//            mav.addObject("id",user.getId());
-//            mav.addObject("userId", user.getUserId());
-//            mav.addObject("userNkname", user.getUserNkname());
+//        user = userService.selectOne(userId);
+        user = userService.selectOne(id);
 
-                mav.addObject("member", user);
+        System.out.println("selectOne ==========>>>>> ");
+        System.out.println(user);
+
+        mav.addObject("member", user);
 
 
-            return mav;
+        return mav;
 
-        }
+    }
+
+
 
         @RequestMapping(value = "/logout")
         public ModelAndView logout(HttpSession session) {
@@ -105,7 +143,9 @@ class RestApiController {
         // 정보수정.. 일단 하나 select 한 다음에 하자.
         @RequestMapping(value = "/updateMember", method = RequestMethod.POST)
         public ModelAndView udpateMember(HttpSession session,User user2) throws Exception{
-            ModelAndView mav = new ModelAndView("myprofile");
+            ModelAndView mav = new ModelAndView("main");
+
+            session.setAttribute("member", user2);
 
             User user = (User) session.getAttribute("member");
             int id = user.getId();
@@ -115,10 +155,28 @@ class RestApiController {
             userService.updateUser(user2);
             System.out.println("userId : " + user.getUserId());
 
-            // 수정하고 값 넘겨줘야함 객체(USER) 를 넘겨줌
-            mav.addObject("member", user2);
+            // 수정하고 값 넘겨줘야함 객체(USER) 를 넘겨줌 해당 id 값을 넘겨주고 select 를 해와서 ModelAndView 객체에 addObject 해줘야 수정하고 메인페이지로 돌아가서도 찍힘
+            User selectuser = userService.selectOne(user2.getId());
+            System.out.println("selectuser : " + selectuser);
+//            mav.addObject("member", selectuser); // 왜 안되지 이건 왜 ?
+            // 이거해줘야 수정하고 메인페이지 들어가면 userId 찍힘.
+            mav.addObject("userId", selectuser.getUserId());
+            mav.addObject("userNkname", selectuser.getUserNkname());
 
             return mav;// 왜 값을 못받아오니..
+        }
+
+        @RequestMapping(value = "/deleteMember/{id}", method = RequestMethod.DELETE)
+        public ModelAndView deleteMember(HttpSession session, @PathVariable int id) throws Exception{
+            ModelAndView mav = new ModelAndView("main");
+            //System.out.println(user.getId());
+
+            System.out.println("탈퇴할때 id : " + id);
+            session.invalidate(); // 로그아웃 처리
+
+            userService.deleteUser(id);
+
+            return mav;
         }
 
 

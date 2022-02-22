@@ -28,8 +28,16 @@
         UPDATE user SET user_id='${userId}',user_nkname='${userNkname}' WHERE id = '${id}'
     </update>
 
-    <select id="selectOne" resultType="com.test.demo.vo.User">
+    <select id="checkUser" resultType="com.test.demo.vo.User" parameterType="String">
         SELECT id, user_id, user_pw, user_nkname FROM user WHERE user_id = #{userId}
     </select>
+
+    <select id="selectOne" resultType="com.test.demo.vo.User">
+        SELECT id, user_id, user_pw, user_nkname FROM user WHERE id = #{id}
+    </select>
+
+    <delete id="deleteUser" parameterType="int">
+        DELETE FROM user WHERE id = '${id}'
+    </delete>
 </mapper>
 

@@ -14,7 +14,7 @@
         <button type="button" onclick="location.href='/selectOne'">내정보</button>
     </th:block>
 
-    <th:block th:if="${userId == null and userId != ''}"}>
+    <th:block th:if="${userId == null or userId == ''}"}>
         <button type="button" onclick="location.href='/login'">로그인</button>
         <button type="button" onclick="location.href='/join'">회원가입</button>
     </th:block>

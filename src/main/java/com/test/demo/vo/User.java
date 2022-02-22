@@ -1,9 +1,8 @@
 package com.test.demo.vo;
 
-import lombok.*;
+// import lombok.*;
 
 import java.time.LocalDate;
-
 
 public class User {
     private int id;

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
 </head>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <body>
 <form th:action="@{/updateMember}" method="post">
 <!--    <input type="hidden" name="_method" value="PATCH">-->
@@ -26,7 +27,29 @@
             </div>
         </th:block>
         <button type="submit" class="btn btn-primary">수정하기</button>
+        <button type="button" class="btn btn-primary" onclick="deleteMember()">회원탈퇴</button>
     </div>
 </form>
+<script th:inline="javascript">
+
+    const pkid = document. querySelector('input').value;    // 첫번째꺼만 반환
+    const pkid2 = document.getElementById('inputId').value; // 해당 id의 value 값 반환
+    console.log('queryselect of id : '+ pkid);
+    console.log('getElementById : ' + pkid2);
+
+    function deleteMember(){
+
+        axios.delete(`/deleteMember/${pkid2}`)
+        .then(response => {
+            console.log(response);
+            console.log("회원탈퇴 성공!");
+
+            location.href = '/'
+        })
+
+    }
+</script>
+
+
 </body>
 </html>
