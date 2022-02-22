@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import java.util.List;
 
 
 /*
@@ -34,27 +34,19 @@ class RestApiController {
         this.userService = userService;
     }
 
-//    @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
-//    public ModelAndView insertMember(User user, HttpSession session) throws Exception{
-//
-//        ModelAndView mav = new ModelAndView("main");
-//
-//        userService.insertUser(user);
-//
-//        System.out.println("userId : " + user.getUserId());
-//        System.out.println("id : " + user.getId());
-//
-//
-//
-//        mav.addObject("userId", user.getUserId());
-//        mav.addObject("userNkname", user.getUserNkname());
-//
-//        session.setAttribute("id",user.getId());
-//        session.setAttribute("userId", user.getUserId());
-//        session.setAttribute("userNkname", user.getUserNkname());
-//
-//       return  mav;// 왜 값을 못받아오니..
-//    }
+    @RequestMapping(value = "/selectUserList", method = RequestMethod.GET)
+    public ModelAndView selectUserList(Model model) throws Exception{
+        ModelAndView mav = new ModelAndView("listall");
+        List<User> allUser = userService.selectUserList();
+        System.out.println(allUser);
+        System.out.println(allUser.size());
+
+        // mav으로 하든 model로 하든 둘 다 상관 없는듯?
+        //mav.addObject("allUser",allUser);
+        model.addAttribute("allUser",allUser);
+
+        return mav;
+    }
 
     @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
     public ModelAndView insertMember(User user, HttpSession session) throws Exception{
@@ -125,6 +117,27 @@ class RestApiController {
 
         mav.addObject("member", user);
 
+        return mav;
+
+    }
+
+    @RequestMapping(value = "/seeprofile",method = RequestMethod.GET)
+    public ModelAndView seeprofile(HttpSession session) throws Exception {
+        ModelAndView mav = new ModelAndView("seeprofile");
+
+        User user = (User) session.getAttribute("member");
+        int id = user.getId(); // ==> 0
+//        String userId = user.getUserId();
+
+        // System.out.println("세션으로 얻은 아이디값 : " + id); // Ok
+
+//        user = userService.selectOne(userId);
+        user = userService.selectOne(id);
+
+        System.out.println("selectOne ==========>>>>> ");
+        System.out.println(user);
+
+        mav.addObject("member", user);
 
         return mav;
 

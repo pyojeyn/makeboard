@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <body>
+<form th:action="@{/updateMember}" method="post">
+    <!--    <input type="hidden" name="_method" value="PATCH">-->
+    <div class="container">
+        <div style="margin-top: 30px">
+            <h2>내 정보</h2>
+        </div>
+
+
+        <th:block th:if="${member.getUserId() != null and member.getUserId() != ''}" >
+
+            <div class="form-group" style="margin-top: 10px; border-top: solid 1px cadetblue;">
+                <p style="font-weight: bold">아이디</p>
+                <p th:text="${member.getUserId()}" ></p>
+            </div>
+            <div class="form-group" style="margin-top: 10px; border-top: solid 1px cadetblue;">
+                <p style="font-weight: bold">닉네임</p>
+                <p th:text="${member.getUserNkname()}"></p>
+            </div>
+            <div class="form-group" style="margin-top: 10px; border-top: solid 1px cadetblue;">
+                <p style="font-weight: bold">가입 날짜</p>
+                <p th:text="${member.getUserRegdate()}"></p>
+            </div>
+
+        </th:block>
+        <button type="button" class="btn btn-primary" onclick="location.href='/selectOne'"/>수정하기</button>
+    </div>
+</form>
 
 </body>
-</html>()
+</html>

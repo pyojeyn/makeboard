@@ -8,8 +8,7 @@ import java.util.List;
 @Repository
 public interface UserService {
 
-
-    //List<User> selectUserList(User user);
+    List<User> selectUserList() throws Exception;
     int insertUser(User user) throws Exception;
     User login(User user) throws Exception;
     int updateUser(User user) throws Exception;

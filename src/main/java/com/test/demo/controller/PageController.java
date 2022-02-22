@@ -22,6 +22,11 @@ public class PageController {
 //    @GetMapping("myprofile")
 //    public String myprofile() { return "myprofile";}
 
+//    @GetMapping("seeprofile")
+//    public String seeprofile(){
+//        return "seeprofile";
+//    }
+
 
 
 }

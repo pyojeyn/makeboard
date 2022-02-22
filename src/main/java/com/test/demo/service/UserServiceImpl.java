@@ -23,10 +23,10 @@ public class UserServiceImpl implements UserService{
         this.userMapper = userMapper;
     }
 
-//    @Override
-//    public List<User> selectUserList(User user) {
-//        return userMapper.selectUserList(user);
-//    }
+    @Override
+    public List<User> selectUserList() throws Exception{
+        return userMapper.selectUserList();
+    }
 
     @Override
     public int insertUser(User user) throws Exception {
