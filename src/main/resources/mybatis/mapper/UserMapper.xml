@@ -16,6 +16,20 @@
           AND user_pw = #{userPw}
     </select>
 
+    <!--로그인 체크-->
+    <select id="checkLogin" resultType="com.test.demo.vo.User">
+        SELECT id,user_id, user_pw, user_nkname
+        FROM user
+        WHERE user_id = #{userId}
+          AND user_pw = #{userPw}
+    </select>
+
+    <!-- 아이디 중복 체크 -->
+    <select id="checkId" resultType="int">
+        SELECT COUNT(*)
+        FROM   user
+        WHERE  user_id = #{userId}
+    </select>
     <!--
         $ 사용시 '' 로 묶어주기
     -->
@@ -23,7 +37,7 @@
     <update id="updateUser" parameterType="com.test.demo.vo.User">
         UPDATE user SET user_id='${userId}',user_nkname='${userNkname}' WHERE id = '${id}'
     </update>
-    <!--로그인시 회원객체 가져오기-->
+    <!--회원가입시 회원객체 가져오기-->
     <select id="checkUser" resultType="com.test.demo.vo.User" parameterType="String">
         SELECT id, user_id, user_pw, user_nkname FROM user WHERE user_id = #{userId}
     </select>

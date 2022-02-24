@@ -59,5 +59,16 @@ public class UserServiceImpl implements UserService{
         return userMapper.deleteUser(id);
     }
 
+    @Override
+    public User checkLogin(User user) throws Exception {
+        return userMapper.checkLogin(user);
+    }
+
+    // 아이디 중복확인
+    @Override
+    public int checkId(String userId) throws Exception {
+        return userMapper.checkId(userId);
+    }
+
 
 }

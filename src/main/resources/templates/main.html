@@ -8,15 +8,14 @@
 <body>
     <h2>메인페이지</h2>
 
-    <a th:href="@{/login}" th:if="${userId == null and userId == ''}" style="text-align: right;">로그인</a>
-    <th:block th:if="${userId != null and userId != ''}" >
-        <label>[[${userId}]] 님  환영합니다.</label>
+    <th:block th:if="${session.userId != null and session.userId != ''}" >
+        <label>[[${session.userId}]] 님  환영합니다.</label>
         <button type="button"><a th:href="@{/logout}" style="text-align: right;">로그아웃</a></button>
         <!--<button type="button" onclick="location.href='/selectOne'">내정보</button>-->
         <button type="button" onclick="location.href='/seeprofile'">내정보</button>
     </th:block>
 
-    <th:block th:if="${userId == null or userId == ''}"}>
+    <th:block th:if="${session.userId == null or session.userId == ''}"}>
         <button type="button" onclick="location.href='/login'">로그인</button>
         <button type="button" onclick="location.href='/join'">회원가입</button>
         <button type="button" onclick="location.href='/selectUserList'">회원목록</button>
