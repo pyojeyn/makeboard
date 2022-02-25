@@ -13,6 +13,7 @@
         <button type="button"><a th:href="@{/logout}" style="text-align: right;">로그아웃</a></button>
         <!--<button type="button" onclick="location.href='/selectOne'">내정보</button>-->
         <button type="button" onclick="location.href='/seeprofile'">내정보</button>
+        <button type="button" onclick="location.href='/writeboard'">글쓰기</button>
     </th:block>
 
     <th:block th:if="${session.userId == null or session.userId == ''}"}>

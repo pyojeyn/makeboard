@@ -1,10 +1,7 @@
 package com.test.demo.controller;
 
-import com.test.demo.service.UserService;
 import com.test.demo.service.UserServiceImpl;
 import com.test.demo.vo.User;
-import org.apache.coyote.Request;
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -29,16 +23,16 @@ import java.util.Map;
     그래서 Class이름을 RestApiController로 변경 후 에러 잡음.
 */
 @RestController
-class RestApiController {
+class UserApiController {
 
     // 로그하기 위해서 , 팩토리 패턴
-    private static Logger logger = LoggerFactory.getLogger(RestApiController.class);
+    private static Logger logger = LoggerFactory.getLogger(UserApiController.class);
 
     // 생성자 주입
     @Autowired
     private final UserServiceImpl userService;
 
-    public RestApiController(UserServiceImpl userService) {
+    public UserApiController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
@@ -258,6 +252,8 @@ class RestApiController {
             System.out.println("checkId result : "+ result );
             return resultMap;
         }
+
+
 
 
     }
