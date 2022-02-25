@@ -12,10 +12,5 @@
     <typeAliases>
         <package name="com.test.demo.vo"/>
     </typeAliases>
-
-
-
-
-
 </configuration>
 

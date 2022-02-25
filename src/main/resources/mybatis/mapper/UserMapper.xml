@@ -25,10 +25,10 @@
     </select>
 
     <!-- 아이디 중복 체크 -->
-    <select id="checkId" resultType="int">
-        SELECT COUNT(*)
+    <select id="checkId" resultType="int" parameterType="String">
+        SELECT COUNT(user_id)
         FROM   user
-        WHERE  user_id = #{userId}
+        WHERE  user_id = '${userId}'
     </select>
     <!--
         $ 사용시 '' 로 묶어주기

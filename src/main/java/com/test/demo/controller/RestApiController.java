@@ -58,24 +58,46 @@ class RestApiController {
 
     // 회원가입
     @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
-    public ModelAndView insertMember(User user, HttpSession session) throws Exception{
-        ModelAndView mav = new ModelAndView("main"); // 반환할 페이지 생성자에 담아서 객체로 만들기
-        System.out.println("insertMember.회원가입userId : " + user.getUserId());
-        System.out.println("insertMember.회원가입id : " + user.getId());
+    public Map<String, Object> insertMember(@RequestBody Map<String, Object> params, HttpSession session) throws Exception{
+//        ModelAndView mav = new ModelAndView("main"); // 반환할 페이지 생성자에 담아서 객체로 만들기
+//        System.out.println("insertMember.회원가입userId : " + user.getUserId());
+//        System.out.println("insertMember.회원가입id : " + user.getId());
 
-        userService.insertUser(user);
+        Map<String, Object> resultMap = new HashMap<>();
 
-        // insert할때는 자동생성키는 필드에 바로 안담긴다. 그래서 UserId를 매개변수로 회원가입 된 User 객체를 찾아와서 mav.addObject에 넣어준다.
-        // 그래야 회원가입하고 main페이지로 갈때 userId의 값을 담아서 화면에 출력해줄 수 있다.
-        User checkUser = userService.checkUser(user.getUserId());
+        String userid = String.valueOf(params.get("user_id"));
 
-        // 세션 담아주기.
-        session.setAttribute("member", checkUser);
-        session.setAttribute("userId", checkUser.getUserId());
-        session.setAttribute("userPw", checkUser.getUserPw());
-        session.setAttribute("userNkname", checkUser.getUserNkname());
+        int checkid = userService.checkId(userid);
 
-        return mav;
+        System.out.println(params);
+
+
+        System.out.println(String.valueOf(params.get("user_id"))); //{}
+
+        System.out.println(checkid); // 1
+
+        if(checkid > 0){
+            resultMap.put("nounique","중복된아이디");
+        }else{
+            User user = new User();
+            user.setUserId(String.valueOf(params.get("user_id")));
+            user.setUserPw(String.valueOf(params.get("user_pw")));
+            user.setUserNkname(String.valueOf(params.get("user_nkname")));
+            userService.insertUser(user);
+            // insert할때는 자동생성키는 필드에 바로 안담긴다. 그래서 UserId를 매개변수로 회원가입 된 User 객체를 찾아와서 mav.addObject에 넣어준다.
+            // 그래야 회원가입하고 main페이지로 갈때 userId의 값을 담아서 화면에 출력해줄 수 있다.
+            User checkUser = userService.checkUser(user.getUserId());
+
+            // 세션 담아주기.
+            session.setAttribute("member", checkUser);
+            session.setAttribute("userId", checkUser.getUserId());
+            session.setAttribute("userPw", checkUser.getUserPw());
+            session.setAttribute("userNkname", checkUser.getUserNkname());
+
+            resultMap.put("done", "회원가입 성공임");
+
+        }
+        return resultMap;
     }
 
 
@@ -216,10 +238,25 @@ class RestApiController {
 
         // 아이디 중복 확인
         @RequestMapping(value = "/checkId", method = RequestMethod.POST)
-        public int checkId(User user) throws Exception{
-            int result = userService.checkId(user.getUserId()); // 이거를 mav Object에다 전달할지.. return 값으로 전달해야 될지 모르겟다.
+        public Map<String, Object> checkId(@RequestBody Map<String, Object> params) throws Exception{
+            //int result = userService.checkId(user); // 이거를 mav Object에다 전달할지.. return 값으로 전달해야 될지 모르겟다.
+            //System.out.println("userid : " + user); // {"user_id":"java"}
+
+            // Map으로 프론트한테 보내줌
+            Map<String, Object> resultMap = new HashMap<>();
+
+            String userid = String.valueOf(params.get("user_id"));
+            System.out.println("userid : " + userid);
+            int result = userService.checkId(userid);
+
+            if(result > 0){
+                resultMap.put("msg", "중복된 아이디 입니다.");
+            }else{
+                resultMap.put("msg", null);
+            }
+
             System.out.println("checkId result : "+ result );
-            return result;
+            return resultMap;
         }
 
 
