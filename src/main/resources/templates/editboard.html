@@ -11,7 +11,7 @@
         <p>작성자 : <span th:text="${board.getWriter()}" name="writer" id="writer"></span></p>
         <p>제목  :  <input type="text" name="title" id="title" th:value="${board.getTitle()}"/> </p>
         <div style="margin-bottom: 10px">
-            <textarea name="content" id="content" rows="4" cols="50" ></textarea>
+            <textarea name="content" id="content" th:value="${board.getContent()}" rows="4" cols="50" ></textarea>
         </div>
     </div>
     <button type="button" onclick="updateboard()">수정하기</button>
@@ -19,19 +19,32 @@
 <script th:inline="javascript">
 
     function updateboard(){
-        let boardid = document.getElementById("id");
-        let boardwriter = document.getElementById("writer");
-        let boardtitle = document.getElementById("title");
-        let boardcontent = document.getElementById("content");
 
-        axios.put(`/updateboard/${boardid}`,JSON.stringify({writer:boardwriter,title:boardtitle,content:boardcontent}),{
+        // 변수 선언 함수 밖에다 하면 content 값 안담김?
+        let boardid = document.getElementById("id").value;
+        let boardwriter = document.getElementById("writer").innerText;
+        let boardtitle = document.getElementById("title").value;
+        let boardcontent = document.getElementById("content").value; // 이거 값 못가져 오는듯?
+
+        console.log("boardid =" + boardid);
+        console.log("boardwriter =" + boardwriter);
+        console.log("boardtitle =" + boardtitle);
+        console.log("boardcontent =" + boardcontent);
+
+
+
+        axios.put(`/updateBoard/${boardid}`,JSON.stringify({writer:boardwriter,title:boardtitle,content:boardcontent}),{
             headers:{
                 "Content-Type": `application/json`
             }
         }).then(response => {
             console.log(response.data);
-            console.log("수정 성공~!");
-            location.href=`/boardDetail/${boardid}`;
+
+            if(response.data.success != null){
+                console.log("수정 성공~!");
+                location.href=`/boardDetail/${boardid}`;
+            }
+
         })
     }
 

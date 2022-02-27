@@ -116,12 +116,20 @@ public class BoardApiController {
     }
 
     // 수정..
-    @RequestMapping(value = "updateBoard/{id}",method = RequestMethod.PUT)
-    public Map<String, Object> updateBoard(@RequestBody Map<String, Object> params,Board board, @PathVariable(value = "id") int id) throws Exception{
+    @RequestMapping(value = "updateBoard/{boardid}",method = RequestMethod.PUT)
+    public Map<String, Object> updateBoard(@RequestBody Map<String, Object> params, @PathVariable(value = "boardid") int id) throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
 
-        //int id = Integer.parseInt(String.valueOf(params.get("id")));
-        System.out.println("수정!"+id);
+//        int boardid = Integer.parseInt(String.valueOf(params.get("id")));
+//        System.out.println("수정!"+boardid);
+        System.out.println("pathVariable" +  id);
+        System.out.println("title==>" + String.valueOf(params.get("title")));
+
+        Board board = new Board();
+        board.setId(id);
+        board.setTitle(String.valueOf(params.get("title")));
+        board.setWriter(String.valueOf(params.get("writer")));
+        board.setContent(String.valueOf(params.get("content")));
         int result = boardService.updateBoard(board);
 
         if(result>0){
