@@ -42,7 +42,7 @@ class UserApiController {
         ModelAndView mav = new ModelAndView("listall");
         List<User> allUser = userService.selectUserList();
         System.out.println("userService.selectUserList()" + allUser);
-        System.out.println("allUser.size()" + allUser.size());
+        System.out.println("allUser.size() : " + allUser.size());
 
         // mav으로 하든 model로 하든 둘 다 상관 없는듯?
         // mav.addObject("allUser",allUser);

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<body>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">글번호</th>
+            <th scope="col">작성자</th>
+            <th scope="col">제목</th>
+            <th scope="col">내용</th>
+            <th scope="col">작성 날짜</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="myboard : ${myboard}">
+            <th scope="row" th:text="${myboard.getId()}">1</th>
+            <td><a th:text="${myboard.getWriter()}" th:href="@{/boardDetail/{userId}(userId=${myboard.getId()})}"></a></td>
+            <td th:text="${myboard.getTitle()}"></td>
+            <td th:text="${myboard.getContent()}"></td>
+            <td th:text="${myboard.getBoardRegdate()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>

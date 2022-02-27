@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmls:th="http://www.thymeleaf.org" xmlns:xmls="http://www.w3.org/1999/xhtml">
+정
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -14,6 +14,7 @@
         <!--<button type="button" onclick="location.href='/selectOne'">내정보</button>-->
         <button type="button" onclick="location.href='/seeprofile'">내정보</button>
         <button type="button" onclick="location.href='/writeboard'">글쓰기</button>
+        <button type="button"><a th:href="@{/myboardList/{userId}(userId=${session.userId})}">내가쓴글</a></button>
     </th:block>
 
     <th:block th:if="${session.userId == null or session.userId == ''}"}>
@@ -21,6 +22,6 @@
         <button type="button" onclick="location.href='/join'">회원가입</button>
         <button type="button" onclick="location.href='/selectUserList'">회원목록</button>
     </th:block>
-
+    <button type="button" onclick="location.href='/allBoard'">게시판</button>
 </body>
 </html>

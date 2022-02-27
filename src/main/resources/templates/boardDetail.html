@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmls:th="http://www.thymeleaf.org" xmlns:xmls="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>글보기</title>
+</head>
+<body>
+    <div>
+        <p>작성자 : <span th:text="${baord.getWriter()}"></span> </p>
+        <p>제목 : <span th:text="${baord.getTitle()}"></span> </p>
+        <p>내용</p>
+        <p th:text="${baord.getContent()}"></p>
+        <p>작성일 : <span th:text="${baord.getBoardRegdate()}"></span></p>
+    </div>
+<!--    <span th:text="${session.userId}"></span>-->
+<!--    <span th:text="${writer}"></span> -->
+    <!-- 위에랑 똑같이 board.getWriter()했는데 에러남 근데 이건 안남.-->
+    <span th:text="${id}"></span>
+    <th:block th:if="${session.userId} == ${writer}">
+        <button type="button" th:onclick="|location.href='@{/editboard(id=${id})}'|">수정</button>
+        <button>삭제</button>
+    </th:block>
+
+</body>
+</html>

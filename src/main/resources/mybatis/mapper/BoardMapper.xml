@@ -3,7 +3,28 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.test.demo.mapper.BoardMapper">
+   <!--글쓰기-->
    <insert id="uploadBoard">
        insert into board (title,content,writer) values(#{title},#{content},#{writer});
    </insert>
+
+    <!--전체 게시물-->
+    <select id="allBoard" resultType="com.test.demo.vo.Board">
+        SELECT id,writer,title,content,board_regdate FROM board;
+    </select>
+
+    <!--해당 글보기-->
+    <select id="boardDetail" resultType="com.test.demo.vo.Board" parameterType="int">
+        SELECT id,writer,title,content,board_regdate FROM board WHERE id=#{id}
+    </select>
+
+    <!-- 내가 쓴글 -->
+    <select id="myboardList" resultType="com.test.demo.vo.Board" parameterType="String">
+        SELECT id,writer,title,content,board_regdate FROM board WHERE writer=#{writer}
+    </select>
+
+    <update id="updateBoard" parameterType="com.test.demo.vo.Board">
+        UPDATE user SET title='${title}', content='${content}' WHERE id = '${id}'
+    </update>
+
 </mapper>
