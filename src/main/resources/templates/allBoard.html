@@ -23,7 +23,7 @@
   <tr th:each="allBoard : ${allBoard}">
     <th scope="row" th:text="${allBoard.getId()}"></th>
 
-    <td><a th:text="${allBoard.getWriter()}" th:href="@{/boardDetail/{id}(id=${allBoard.getId()})}"></a></td>
+    <td><a style="color: white" th:text="${allBoard.getWriter()}" th:href="@{/boardDetail/{id}(id=${allBoard.getId()})}"></a></td>
 
     <td th:text="${allBoard.getTitle()}"></td>
     <td th:text="${allBoard.getContent()}"></td>
@@ -31,6 +31,8 @@
   </tr>
   </tbody>
 </table>
+<button type="button" class="btn btn-info" th:onclick="|location.href='@{/}'|">메인</button>
+<button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/writeboard}'|">글쓰기</button>
 </body>
 </html>
 

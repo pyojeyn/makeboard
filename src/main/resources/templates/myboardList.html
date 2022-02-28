@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
 </head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 <body>
     <div style="margin: 40px 40px" >
         <h2>내가 쓴 글</h2>
@@ -22,12 +24,14 @@
         <tbody>
         <tr th:each="myboard : ${myboard}">
             <th scope="row" th:text="${myboard.getId()}">1</th>
-            <td><a th:text="${myboard.getWriter()}" th:href="@{/boardDetail/{userId}(userId=${myboard.getId()})}"></a></td>
+            <td><a style="color: black" th:text="${myboard.getWriter()}" th:href="@{/boardDetail/{userId}(userId=${myboard.getId()})}"></a></td>
             <td th:text="${myboard.getTitle()}"></td>
             <td th:text="${myboard.getContent()}"></td>
             <td th:text="${myboard.getBoardRegdate()}"></td>
         </tr>
         </tbody>
     </table>
+    <button type="button" class="btn btn-info" th:onclick="|location.href='@{/}'|">메인</button>
+    <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/writeboard}'|">글쓰기</button>
 </body>
 </html>

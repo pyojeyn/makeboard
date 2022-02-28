@@ -3,24 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
+    <style>
+        body {
+            padding-top: 70px;
+            padding-bottom: 30px;
+
+        }
+
+    </style>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
 <body>
+<div class="container">
     <th:block th:if="${member.getUserId() != null and member.getUserId() != ''}">
-        <div style="margin-bottom: 10px">
-            <span>작성자 : </span>
+        <div class="mb-3">
+            <label for="writer">작성자</label>
             <span th:text="${member.getUserId()}" name="writer" id="writer"></span>
         </div>
     </th:block>
-        <div  style="margin-bottom: 10px">
-            <span>글제목 : </span>
-            <input type="text" name="title" id="title"/>
-        </div>
-        <div style="margin-bottom: 10px">
-            <textarea name="content" id="content" rows="4" cols="50"></textarea>
-        </div>
-        <button type="button" onclick="uploadBoard()">글 올리기</button>
+
+    <div class="mb-3">
+        <label for="title">제목</label>
+        <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력해 주세요">
+    </div>
+
+    <div class="mb-3">
+        <label for="content">내용</label>
+        <textarea class="form-control" rows="5" name="content" id="content" placeholder="내용을 입력해 주세요" ></textarea>
+    </div>
+    <button type="button" class="btn btn-sm btn-primary" id="btnSave" onclick="uploadBoard()">저장</button>
+</div>
+
+
 </body>
 </html>
 <script th:inline="javascript">

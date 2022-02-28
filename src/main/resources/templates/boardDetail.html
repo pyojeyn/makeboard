@@ -7,14 +7,28 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <style>
-    table {
+    body{
         width: 100%;
+        height: 100%;
+    }
+
+    table {
         border: 1px solid #444444;
         border-collapse: collapse;
+        width: 30%;
+        height: 30%;
     }
     th, td {
         border: 1px solid #444444;
         padding: 10px;
+    }
+    th {
+        width: 60px;
+    }
+
+    .container {
+        margin-top: 100px;
+        margin-left: 35%;
     }
 </style>
 <body>
@@ -22,6 +36,7 @@
 <!--    <span th:text="${session.userId}"></span>-->
 <!--    <span th:text="${writer}"></span> -->
     <!-- 위에랑 똑같이 board.getWriter()했는데 에러남 근데 이건 안남.-->
+<div class="container">
     <table>
         <tr>
             <th>글번호</th>
@@ -52,9 +67,16 @@
             <button type="button" class="btn btn-warning" th:onclick="|location.href='@{/editboard(id=${id})}'|">수정</button>
             <button type="button" class="btn btn-danger" th:onclick="deleteBoard()">삭제</button>
             <button type="button" class="btn btn-info" th:onclick="|location.href='@{/}'|">메인</button>
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/allBoard}'|">게시판</button>
         </div>
     </th:block>
-
+    <th:block th:if="${session.userId} != ${baord.getWriter()}">
+        <div style="margin-top: 30px">
+            <button type="button" class="btn btn-info" th:onclick="|location.href='@{/}'|">메인</button>
+            <button type="button" class="btn btn-light" th:onclick="|location.href='@{/allBoard}'|">게시판</button>
+        </div>
+    </th:block>
+</div>
     <script th:inline="javascript">
         function deleteBoard(){
             var id = [[${id}]]; // 서버에서 보낸값 받기 ex) mav.addObject("id", boarddetail.getId());
