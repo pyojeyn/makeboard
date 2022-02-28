@@ -5,21 +5,54 @@
     <title>글보기</title>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<style>
+    table {
+        width: 100%;
+        border: 1px solid #444444;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #444444;
+        padding: 10px;
+    }
+</style>
 <body>
-    <div>
-        <p>작성자 : <span th:text="${baord.getWriter()}"></span> </p>
-        <p>제목 : <span th:text="${baord.getTitle()}"></span> </p>
-        <p>내용</p>
-        <p th:text="${baord.getContent()}"></p>
-        <p>작성일 : <span th:text="${baord.getBoardRegdate()}"></span></p>
-    </div>
+
 <!--    <span th:text="${session.userId}"></span>-->
 <!--    <span th:text="${writer}"></span> -->
     <!-- 위에랑 똑같이 board.getWriter()했는데 에러남 근데 이건 안남.-->
-    <span th:text="${id}"></span>
-    <th:block th:if="${session.userId} == ${writer}">
-        <button type="button" th:onclick="|location.href='@{/editboard(id=${id})}'|">수정</button>
-        <button type="button" th:onclick="deleteBoard()">삭제</button>
+    <table>
+        <tr>
+            <th>글번호</th>
+            <td><span th:text="${id}"></span></td>
+        </tr>
+        <tr>
+            <th>작성자</th>
+            <td><span th:text="${baord.getWriter()}"></span></td>
+        </tr>
+        <tr>
+            <th>제목</th>
+            <td><span th:text="${baord.getTitle()}"></span></td>
+        </tr>
+        <tr>
+            <th>내용</th>
+            <td><span th:text="${baord.getContent()}"></span></td>
+        </tr>
+        <tr>
+            <th>작성일</th>
+            <td><span th:text="${baord.getBoardRegdate()}"></span></td>
+        </tr>
+    </table>
+
+
+<!--    <span th:text="${id}"></span>-->
+    <th:block th:if="${session.userId} == ${baord.getWriter()}">
+        <div style="margin-top: 30px">
+            <button type="button" class="btn btn-warning" th:onclick="|location.href='@{/editboard(id=${id})}'|">수정</button>
+            <button type="button" class="btn btn-danger" th:onclick="deleteBoard()">삭제</button>
+            <button type="button" class="btn btn-info" th:onclick="|location.href='@{/}'|">메인</button>
+        </div>
     </th:block>
 
     <script th:inline="javascript">
