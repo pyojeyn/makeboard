@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>글보기</title>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <body>
     <div>
         <p>작성자 : <span th:text="${baord.getWriter()}"></span> </p>
@@ -18,8 +19,20 @@
     <span th:text="${id}"></span>
     <th:block th:if="${session.userId} == ${writer}">
         <button type="button" th:onclick="|location.href='@{/editboard(id=${id})}'|">수정</button>
-        <button>삭제</button>
+        <button type="button" th:onclick="deleteBoard()">삭제</button>
     </th:block>
 
+    <script th:inline="javascript">
+        function deleteBoard(){
+            var id = [[${id}]]; // 서버에서 보낸값 받기 ex) mav.addObject("id", boarddetail.getId());
+            console.log(id);
+
+            axios.delete(`/deleteBoard/${id}`)
+            .then(response =>{
+                alert("게시물이 삭제되었습니다.");
+                location.href='/allBoard';
+            })
+        }
+    </script>
 </body>
 </html>

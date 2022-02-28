@@ -142,6 +142,14 @@ public class BoardApiController {
         return resultMap;
     }
 
+    @RequestMapping(value = "/deleteBoard/{id}", method = RequestMethod.DELETE)
+    public ModelAndView deleteBoard(@PathVariable int id) throws Exception{
+        ModelAndView mav = new ModelAndView("allBoard");
+
+        boardService.deleteBoard(id);
+
+        return mav;
+    }
 
 
 

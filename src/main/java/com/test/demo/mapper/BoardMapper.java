@@ -19,4 +19,6 @@ public interface BoardMapper {
 
     int updateBoard(Board board) throws Exception;
 
+    int deleteBoard(int id) throws Exception;
+
 }
