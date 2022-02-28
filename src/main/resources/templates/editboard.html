@@ -3,18 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>글수정</title>
+    <style>
+        body {
+            padding-top: 70px;
+            padding-bottom: 30px;
+        }
+    </style>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <body>
-    <div>
+    <div class="container">
         <input type="hidden" name="id" id="id" th:value="${board.getId()}"/>
-        <p>작성자 : <span th:text="${board.getWriter()}" name="writer" id="writer"></span></p>
-        <p>제목  :  <input type="text" name="title" id="title" th:value="${board.getTitle()}"/> </p>
-        <div style="margin-bottom: 10px">
-            <textarea name="content" id="content" th:value="${board.getContent()}" rows="4" cols="50" ></textarea>
+        <div class="mb-3">
+            <label for="writer">작성자</label>
+            <span th:text="${board.getWriter()}" name="writer" id="writer"></span>
         </div>
+<!--        <p>작성자 : <span th:text="${board.getWriter()}" name="writer" id="writer"></span></p>-->
+        <div class="mb-3">
+            <label for="writer">제목</label>
+            <input type="text" class="form-control" name="title" id="title" th:value="${board.getTitle()}"/>
+        </div>
+<!--        <p>제목  :  <input type="text" name="title" id="title" th:value="${board.getTitle()}"/> </p>-->
+        <div class="mb-3">
+            <label for="content">내용</label>
+            <textarea class="form-control" rows="5" name="content" id="content" th:text="${board.getContent()}" placeholder="내용을 입력해 주세요" ></textarea>
+        </div>
+<!--        <div style="margin-bottom: 10px"> -->
+<!--            <textarea name="content" id="content" th:value="${board.getContent()}" rows="4" cols="50" ></textarea>-->
+<!--        </div>-->
+        <button type="button" class="btn btn-sm btn-primary" id="btnSave" onclick="updateboard()">수정하기</button>
     </div>
-    <button type="button" onclick="updateboard()">수정하기</button>
+
+<!--    <button type="button" onclick="updateboard()">수정하기</button>-->
 
 <script th:inline="javascript">
 
