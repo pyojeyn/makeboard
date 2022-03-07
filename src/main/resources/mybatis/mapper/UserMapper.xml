@@ -52,6 +52,8 @@
         DELETE FROM user WHERE id = '${id}'
     </delete>
 
+
+
     <!--전체 회원 불러오기-->
     <select id="selectUserList" resultType="com.test.demo.vo.User">
         SELECT id,user_id,user_pw,user_nkname,user_regdate FROM user;

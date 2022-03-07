@@ -13,4 +13,5 @@ public interface BoardService {
     List<Board> myboardList(String userId) throws Exception;
     int updateBoard(Board board) throws Exception;
     int deleteBoard(int id) throws Exception;
+    int deleteBoardWithWriter(String writer) throws Exception;
 }

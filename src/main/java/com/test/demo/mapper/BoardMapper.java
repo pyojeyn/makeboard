@@ -21,4 +21,7 @@ public interface BoardMapper {
 
     int deleteBoard(int id) throws Exception;
 
+    // writer 를 이용해서 글 삭제
+    int deleteBoardWithWriter(String writer) throws Exception;
+
 }

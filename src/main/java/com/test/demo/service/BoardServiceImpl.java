@@ -44,4 +44,9 @@ public class BoardServiceImpl implements BoardService{
     public int deleteBoard(int id) throws Exception {
         return boardMapper.deleteBoard(id);
     }
+
+    @Override
+    public int deleteBoardWithWriter(String writer) throws Exception {
+        return boardMapper.deleteBoardWithWriter(writer);
+    }
 }

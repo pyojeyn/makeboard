@@ -33,4 +33,9 @@
         DELETE FROM board WHERE id = '${id}'
     </delete>
 
+    <!-- writer 를 이용해서 글 삭제 -->
+    <delete id="deleteBoardWithWriter" parameterType="String">
+        DELETE FROM board WHERE writer = '${writer}'
+    </delete>
+
 </mapper>

@@ -1,5 +1,6 @@
 package com.test.demo.controller;
 
+import com.test.demo.service.BoardServiceImpl;
 import com.test.demo.service.UserServiceImpl;
 import com.test.demo.vo.User;
 import org.slf4j.Logger;
@@ -31,9 +32,11 @@ class UserApiController {
     // 생성자 주입
     @Autowired
     private final UserServiceImpl userService;
+    private final BoardServiceImpl boardService;
 
-    public UserApiController(UserServiceImpl userService) {
+    public UserApiController(UserServiceImpl userService, BoardServiceImpl boardService) {
         this.userService = userService;
+        this.boardService = boardService;
     }
 
     // 전체 회원 리스트 조회
@@ -114,6 +117,7 @@ class UserApiController {
         // Map으로 프론트한테 보내줌
         Map<String, Object> resultMap = new HashMap<>();
 
+        // try~catch 구문은 최대한 짧아야한다! Exception 이 나지 않을 코드는 try 구문 안에 넣지 말자!
         try{
 
             User checkUser = new User(); // 1. 빈 User 객체 하나 만들기
@@ -221,11 +225,28 @@ class UserApiController {
         public ModelAndView deleteMember(HttpSession session, @PathVariable int id) throws Exception{
             ModelAndView mav = new ModelAndView("main");
 
-            System.out.println("탈퇴할때 id : " + id);
-            session.invalidate(); // 로그아웃 처리
+            // id는 회원아이디..
+            User user = userService.selectOne(id);
+            System.out.println("userService.selectOne : " + user);
 
-            userService.deleteUser(id);
+            String writer = user.getUserId();
+            System.out.println("writer = " + writer);
 
+
+
+            // 해당 회원이 남긴 글 삭제!
+
+            int result = boardService.deleteBoardWithWriter(writer);
+
+
+            if(result > 0){
+                System.out.println("탈퇴할때 id : " + id);
+                session.invalidate(); // 로그아웃 처리
+                System.out.println("탈퇴할 회원이 남긴 글 삭제 성공!");
+                // 유저 삭제 !!
+                userService.deleteUser(id);
+                System.out.println("회원탈퇴 성공~!");
+            }
             return mav;
         }
 
@@ -252,8 +273,6 @@ class UserApiController {
             System.out.println("checkId result : "+ result );
             return resultMap;
         }
-
-
 
 
     }
