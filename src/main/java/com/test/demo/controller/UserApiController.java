@@ -18,10 +18,10 @@ import java.util.Map;
 
 
 /*
-    RestController 클래스를 만들고 어노테이션을 @RestController로 입력.
-    그러나 빨간줄로 restcontroller is not an annotation type 오류가 나며 해당 오류 내용이 나오며 import로는 불가능하고 @org.springFramework.~~ 형태로 어노테이션을 작성해야 했다.
+    RestController 클래스를 만들고 어노테이션을 @RestController 로 입력.
+    그러나 빨간줄로 restController is not an annotation type 오류가 나며 해당 오류 내용이 나오며 import 로는 불가능하고 @org.springFramework.~~ 형태로 어노테이션을 작성해야 했다.
     뭔가 이상해서 구글링을 해보니 어노테이션 안의 RestController 클래스와 충돌이 발생해서 그렇다는 내용 확인.
-    그래서 Class이름을 RestApiController로 변경 후 에러 잡음.
+    그래서 Class 이름을 RestApiController 로 변경 후 에러 잡음.
 */
 @RestController
 class UserApiController {
@@ -29,11 +29,12 @@ class UserApiController {
     // 로그하기 위해서 , 팩토리 패턴
     private static Logger logger = LoggerFactory.getLogger(UserApiController.class);
 
-    // 생성자 주입
-    @Autowired
+
     private final UserServiceImpl userService;
     private final BoardServiceImpl boardService;
 
+    // 생성자 주입
+    @Autowired
     public UserApiController(UserServiceImpl userService, BoardServiceImpl boardService) {
         this.userService = userService;
         this.boardService = boardService;
@@ -159,7 +160,7 @@ class UserApiController {
 
 
 
-        // 회원하나 조회해서 관련 데이터 뿌려줘야함?   @pathViriable
+    // 회원하나 조회해서 관련 데이터 뿌려줘야함?   @pathViriable
     @RequestMapping(value = "/selectOne",method = RequestMethod.GET)
     public ModelAndView selectOne(HttpSession session) throws Exception {
         ModelAndView mav = new ModelAndView("myprofile");
@@ -196,13 +197,13 @@ class UserApiController {
 
 
 
-    @RequestMapping(value = "/logout")
-    public ModelAndView logout(HttpSession session) {
-        session.invalidate();
-        ModelAndView mv = new ModelAndView("redirect:/");
-        System.out.println("로그아웃됨!");
-        return mv;
-    }
+        @RequestMapping(value = "/logout")
+        public ModelAndView logout(HttpSession session) {
+            session.invalidate();
+            ModelAndView mv = new ModelAndView("redirect:/");
+            System.out.println("로그아웃됨!");
+            return mv;
+        }
 
 
         @RequestMapping(value = "/updateMember", method = RequestMethod.POST)
@@ -235,9 +236,7 @@ class UserApiController {
 
 
             // 해당 회원이 남긴 글 삭제!
-
             int result = boardService.deleteBoardWithWriter(writer);
-
 
             if(result > 0){
                 System.out.println("탈퇴할때 id : " + id);
