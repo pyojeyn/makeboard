@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 public class BoardApiController {
 
-    @Autowired // @Service 달아줘야함.
+    @Autowired // @Service 달아줘야함. 0411 테스트
     private final BoardServiceImpl boardService;
 
     @Autowired
