@@ -45,9 +45,11 @@ class UserApiController {
     public ModelAndView selectUserList(Model model) throws Exception{
         ModelAndView mav = new ModelAndView("listall");
         List<User> allUser = userService.selectUserList();
-        System.out.println("userService.selectUserList()" + allUser);
-        System.out.println("allUser.size() : " + allUser.size());
 
+        logger.info("allUser={}", allUser);
+        logger.info("allUser.size()={}", allUser.size());
+
+        // 파라미터에는 Model을 받았는데.. 페이지는 ModelAndView 에 던져주고.. 데이터는 그냥 Model 에 이렇게 따로따로 담아주는것이.. 과연 좋은 코드일까. 0427
         // mav으로 하든 model로 하든 둘 다 상관 없는듯?
         // mav.addObject("allUser",allUser);
         model.addAttribute("allUser",allUser);
@@ -68,8 +70,6 @@ class UserApiController {
         int checkid = userService.checkId(userid);
 
         System.out.println(params);
-
-
         System.out.println(String.valueOf(params.get("user_id"))); //{}
 
         System.out.println(checkid); // 1
@@ -82,8 +82,8 @@ class UserApiController {
             user.setUserPw(String.valueOf(params.get("user_pw")));
             user.setUserNkname(String.valueOf(params.get("user_nkname")));
             userService.insertUser(user);
-            // insert할때는 자동생성키는 필드에 바로 안담긴다. 그래서 UserId를 매개변수로 회원가입 된 User 객체를 찾아와서 mav.addObject에 넣어준다.
-            // 그래야 회원가입하고 main페이지로 갈때 userId의 값을 담아서 화면에 출력해줄 수 있다.
+            // insert 할때는 자동생성키는 필드에 바로 안담긴다. 그래서 UserId를 매개변수로 회원가입 된 User 객체를 찾아와서 mav.addObject 에 넣어준다.
+            // 그래야 회원가입하고 main 페이지로 갈때 userId의 값을 담아서 화면에 출력해줄 수 있다.
             User checkUser = userService.checkUser(user.getUserId());
 
             // 세션 담아주기.
@@ -98,38 +98,22 @@ class UserApiController {
         return resultMap;
     }
 
-
-//    @RequestMapping(value = "/checkLogin", method = RequestMethod.POST)
-//    public User checkLogin(User user, Model model) throws Exception{
-//
-//        User checkLogin = userService.checkLogin(user);
-//
-////        model.addAttribute("msg","error");
-////        model.addAttribute("data", model);
-//
-//        return checkLogin;
-//
-//    }
-
     // 로그인후 처리 실행만? API 완전 완전 어려움.
-    @RequestMapping(value = "/loginExecute", method = RequestMethod.POST)  //어떻게 Map으로 받는거지?
+    @RequestMapping(value = "/loginExecute", method = RequestMethod.POST)  //어떻게 Map 으로 받는거지?
     public Map<String, Object> loginExecute(@RequestBody Map<String, Object> params, HttpSession session){
 
-        // Map으로 프론트한테 보내줌
+        // Map 으로 프론트한테 보내줌
         Map<String, Object> resultMap = new HashMap<>();
+
+        User checkUser = new User(); // 1. 빈 User 객체 하나 만들기
+        logger.info("params={}",params.toString()); // 넘어온 값들 출력
+
+        // 빈 User 객체에 넘어온 값들을 UserId, UserPw 필드에 set 해줌 하지만 params 의 타입은 Object 이기 때문에 형변환을 해줘야 한다.
+        checkUser.setUserId(String.valueOf(params.get("user_id"))); // "" 안에 들어가는 거는 axios 에서 보낸 프로퍼티랑 똑같이 입력해줘야 한다.
+        checkUser.setUserPw(String.valueOf(params.get("user_pw")));
 
         // try~catch 구문은 최대한 짧아야한다! Exception 이 나지 않을 코드는 try 구문 안에 넣지 말자!
         try{
-
-            User checkUser = new User(); // 1. 빈 User 객체 하나 만들기
-
-            logger.info(params.toString()); // 넘어온 값들 출력
-
-            // 빈 User 객체에 넘어온 값들을 UserId, UserPw 필드에 set 해줌 하지만 params의 타입은 Object이기 때문에 형변환을 해줘야 한다.
-            checkUser.setUserId(String.valueOf(params.get("user_id"))); // "" 안에 들어가는 거는 axios에서 보낸 프로퍼티랑 똑같이 입력해줘야 한다.
-            checkUser.setUserPw(String.valueOf(params.get("user_pw")));
-
-            //slf4j <- log4j   -> 초면이다. 공부해야지;
             // 로그인 수행 ( 유저 체크 )
             User loginUser = userService.login(checkUser);
 
@@ -137,7 +121,7 @@ class UserApiController {
                 resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 프로트단에 보낼 메세지
                 resultMap.put("msg", "로그인 실패했습니다.");
                 resultMap.put("log", "1");
-            } else {    //로그인 성공 mainpage에서 session 값 받아서 값 출력
+            } else {    //로그인 성공 mainpage 에서 session 값 받아서 값 출력
                 session.setAttribute("member", loginUser);
                 session.setAttribute("userId", loginUser.getUserId());
                 session.setAttribute("userPw", loginUser.getUserPw());
@@ -147,14 +131,16 @@ class UserApiController {
             }
 
         } catch (Exception e){
-
             logger.info("로그인 오류 : " + e.getMessage());
-
-            resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
             resultMap.put("msg", e.getMessage());
+            // 이거 catch 밖에다 했는데 로그인안되고 3으로 넘어가네;
+            resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
             resultMap.put("log", "3");
 
         }
+
+
+
         return resultMap;
     }
 

@@ -63,29 +63,28 @@
 
 <script th:inline="javascript">
 
-
-
     window.onload = function(){
 
     document.getElementById("inputEmail4").addEventListener('keyup',()=>{
+
         const userid = document.getElementById("inputEmail4").value; // 이거 밖에다 하면 안찍힘;;;;
-            axios.post('/checkId',JSON.stringify({user_id : userid}),{
-                headers:{
-                    "Content-Type": `application/json`, // 서버단에서 @RequestBody 형식으로 param을 받아서 @RequestBody랑 형식 맞춰주기 위해
+
+        axios.post('/checkId',JSON.stringify({user_id : userid}),{
+            headers:{
+                "Content-Type": `application/json`, // 서버단에서 @RequestBody 형식으로 param 을 받기때문에 @RequestBody 랑 형식 맞춰주기 위해
+            }
+        }).then(response => {
+                console.log("userid    :" + userid);
+                console.log("response ↓");
+                console.log(response); // data 가 0 으로 나오는 상태임.. 중복된 아이디 있는데도..
+                console.log("아이디 중복 체크");
+                if(response.data.msg != null){
+                    document.getElementById("checkMessage").innerHTML = response.data.msg;
+                    // document.getElementById("inputEmail4").onfocus;
+                }else{
+                    document.getElementById("checkMessage").innerHTML = "사용가능한 아이디입니다.";
                 }
             })
-                .then(response => {
-                    console.log("userid    :" + userid);
-                    console.log("response ↓")
-                    console.log(response); // data 가 0 으로 나오는 상태임.. 중복된 아이디 있는데도..
-                    console.log("아이디 중복 체크");
-                    if(response.data.msg != null){
-                        document.getElementById("checkMessage").innerHTML = response.data.msg;
-                        // document.getElementById("inputEmail4").onfocus;
-                    }else{
-                        document.getElementById("checkMessage").innerHTML = "사용가능한 아이디입니다.";
-                    }
-                })
         })
     }
 
@@ -94,7 +93,7 @@
         let userpw = document.getElementById("inputPassword4").value;
         let usernkname = document.getElementById("inputAddress").value;
 
-        // JSON.stringify 에는 body로 못넣나봄..
+        // JSON.stringify 에는 body 로 못넣나봄..
         let body = {user_id : userid, user_pw : userpw, user_nkname:usernkname};
 
         axios.post('/insertMember',JSON.stringify({user_id : userid, user_pw : userpw, user_nkname:usernkname}),{
@@ -105,7 +104,6 @@
             console.log(response);
             if(response.data.nounique != null){
                 alert("아이디를 다시 작성해 주세요");
-                //location.href = '/join';
             }
 
             if(response.data.done != null){
