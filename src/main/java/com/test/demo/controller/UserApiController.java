@@ -59,9 +59,6 @@ class UserApiController {
     // 회원가입
     @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
     public Map<String, Object> insertMember(@RequestBody Map<String, Object> params, HttpSession session) throws Exception{
-//        ModelAndView mav = new ModelAndView("main"); // 반환할 페이지 생성자에 담아서 객체로 만들기
-//        System.out.println("insertMember.회원가입userId : " + user.getUserId());
-//        System.out.println("insertMember.회원가입id : " + user.getId());
 
         Map<String, Object> resultMap = new HashMap<>();
 
@@ -69,10 +66,9 @@ class UserApiController {
 
         int checkid = userService.checkId(userid);
 
-        System.out.println(params);
-        System.out.println(String.valueOf(params.get("user_id"))); //{}
-
-        System.out.println(checkid); // 1
+        logger.info("params={}", params);
+        logger.info("params.get(user_id)={}", String.valueOf(params.get("user_id")));
+        logger.info("checkid={}", checkid);
 
         if(checkid > 0){
             resultMap.put("nounique","중복된아이디");
@@ -138,9 +134,6 @@ class UserApiController {
             resultMap.put("log", "3");
 
         }
-
-
-
         return resultMap;
     }
 
@@ -151,13 +144,10 @@ class UserApiController {
     public ModelAndView selectOne(HttpSession session) throws Exception {
         ModelAndView mav = new ModelAndView("myprofile");
 
+        // 0501 굳이 selectOne 하는 mapper 를 사용해야 하나? 그냥 세션으로 가져온 애를 그냥 mav 에 넘겨줘도 되지 않나?
         User user = (User) session.getAttribute("member"); // 세션에 있는 객체 받아와서 user 객체에 할당.
-        int id = user.getId(); // ==> 아이디를 int id 에 할당해주고
-        user = userService.selectOne(id); // 그 아이디를 selectOne의 매개변수로
 
-        System.out.println("selectOne ==========>>>>> ");
-        System.out.println(user);
-
+        logger.info("selectOne={}", user);
         mav.addObject("member", user);
 
         return mav;
@@ -168,99 +158,83 @@ class UserApiController {
         ModelAndView mav = new ModelAndView("seeprofile");
 
         User user = (User) session.getAttribute("member");
-        int id = user.getId(); // ==> 0
-
-        user = userService.selectOne(id);
-
-        System.out.println("selectOne ==========>>>>> ");
-        System.out.println(user);
-
+        logger.info("seeprofile.selectOne={}", user);
         mav.addObject("member", user);
 
         return mav;
-
     }
 
 
 
-        @RequestMapping(value = "/logout")
-        public ModelAndView logout(HttpSession session) {
-            session.invalidate();
-            ModelAndView mv = new ModelAndView("redirect:/");
-            System.out.println("로그아웃됨!");
-            return mv;
-        }
-
-
-        @RequestMapping(value = "/updateMember", method = RequestMethod.POST)
-        public ModelAndView updateMember(HttpSession session,User user2) throws Exception{
-            ModelAndView mav = new ModelAndView("main");
-
-            session.setAttribute("member", user2);
-            session.setAttribute("userId", user2.getUserId());
-            session.setAttribute("userPw", user2.getUserPw());
-            session.setAttribute("userNkname", user2.getUserNkname());
-
-            System.out.println("새로 바꾼 닉네임 : " + user2.getUserNkname());
-
-            userService.updateUser(user2);
-
-            return mav;
-        }
-
-        @RequestMapping(value = "/deleteMember/{id}", method = RequestMethod.DELETE)
-        public ModelAndView deleteMember(HttpSession session, @PathVariable int id) throws Exception{
-            ModelAndView mav = new ModelAndView("main");
-
-            // id는 회원아이디..
-            User user = userService.selectOne(id);
-            System.out.println("userService.selectOne : " + user);
-
-            String writer = user.getUserId();
-            System.out.println("writer = " + writer);
-
-
-
-            // 해당 회원이 남긴 글 삭제!
-            int result = boardService.deleteBoardWithWriter(writer);
-
-            if(result > 0){
-                System.out.println("탈퇴할때 id : " + id);
-                session.invalidate(); // 로그아웃 처리
-                System.out.println("탈퇴할 회원이 남긴 글 삭제 성공!");
-                // 유저 삭제 !!
-                userService.deleteUser(id);
-                System.out.println("회원탈퇴 성공~!");
-            }
-            return mav;
-        }
-
-
-        // 아이디 중복 확인
-        @RequestMapping(value = "/checkId", method = RequestMethod.POST)
-        public Map<String, Object> checkId(@RequestBody Map<String, Object> params) throws Exception{
-            //int result = userService.checkId(user); // 이거를 mav Object에다 전달할지.. return 값으로 전달해야 될지 모르겟다.
-            //System.out.println("userid : " + user); // {"user_id":"java"}
-
-            // Map으로 프론트한테 보내줌
-            Map<String, Object> resultMap = new HashMap<>();
-
-            String userid = String.valueOf(params.get("user_id"));
-            System.out.println("userid : " + userid);
-            int result = userService.checkId(userid);
-
-            if(result > 0){
-                resultMap.put("msg", "중복된 아이디 입니다.");
-            }else{
-                resultMap.put("msg", null);
-            }
-
-            System.out.println("checkId result : "+ result );
-            return resultMap;
-        }
-
-
+    @RequestMapping(value = "/logout")
+    public ModelAndView logout(HttpSession session) {
+        session.invalidate();
+        ModelAndView mv = new ModelAndView("redirect:/");
+        logger.info("로그아웃됨");
+        return mv;
     }
+
+
+    @RequestMapping(value = "/updateMember", method = RequestMethod.POST)
+    public ModelAndView updateMember(HttpSession session,User user2) throws Exception{
+        ModelAndView mav = new ModelAndView("main");
+
+        session.setAttribute("member", user2);
+        session.setAttribute("userId", user2.getUserId());
+        session.setAttribute("userPw", user2.getUserPw());
+        session.setAttribute("userNkname", user2.getUserNkname());
+
+        logger.info("새로 바꾼 닉네임={}", user2.getUserNkname());
+        userService.updateUser(user2);
+        return mav;
+    }
+
+    @RequestMapping(value = "/deleteMember/{id}", method = RequestMethod.DELETE)
+    public ModelAndView deleteMember(HttpSession session, @PathVariable int id) throws Exception{
+        ModelAndView mav = new ModelAndView("main");
+
+        // id는 회원아이디
+        User user = userService.selectOne(id);
+        logger.info("deleteMember.selectOne={}", user);
+
+        String writer = user.getUserId();
+
+        logger.info("writer={}", writer);
+
+        // 해당 회원이 남긴 글 삭제!
+        int result = boardService.deleteBoardWithWriter(writer);
+        if(result > 0){
+            logger.info("탈퇴할 회원이 남긴 글 삭제 성공!");
+        }
+        // 유저 삭제 !!
+        session.invalidate(); // 로그아웃 처리
+        userService.deleteUser(id);
+        logger.info("회원탈퇴 성공!");
+        return mav;
+    }
+
+
+    // 아이디 중복 확인
+    @RequestMapping(value = "/checkId", method = RequestMethod.POST)
+    public Map<String, Object> checkId(@RequestBody Map<String, Object> params) throws Exception{
+        // Map 으로 프론트한테 보내줌
+        Map<String, Object> resultMap = new HashMap<>();
+
+        String userid = String.valueOf(params.get("user_id"));
+        logger.info("userid={}", userid);
+
+        int result = userService.checkId(userid);
+
+        if(result > 0){
+            resultMap.put("msg", "중복된 아이디 입니다.");
+        }else{
+            resultMap.put("msg", null);
+        }
+
+        logger.info("checkId result={}", result);
+        return resultMap;
+    }
+}
 
 
 
