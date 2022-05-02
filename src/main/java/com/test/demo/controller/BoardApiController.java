@@ -5,6 +5,7 @@ import com.test.demo.service.BoardServiceImpl;
 import com.test.demo.service.UserServiceImpl;
 import com.test.demo.vo.Board;
 import com.test.demo.vo.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 public class BoardApiController {
 
@@ -24,34 +26,47 @@ public class BoardApiController {
     @Autowired
     private final UserServiceImpl userService;
 
+    // 생성자 주입
     public BoardApiController(BoardServiceImpl boardService, UserServiceImpl userService) { this.boardService = boardService;
     this.userService=userService;}
 
+    /**
+     *
+     * @param model
+     * @return
+     * @throws Exception
+     *
+     * 게시판 리스트
+     */
     @RequestMapping(value = "/allBoard", method = RequestMethod.GET)
     public ModelAndView allBoard(Model model) throws Exception{
         ModelAndView mav = new ModelAndView("allBoard");
         List<Board> allBoard = boardService.allBoard();
-        System.out.println("boardService.allBoard()" + allBoard);
-
+        log.info("boardService.allBoard()={}", allBoard);
         model.addAttribute("allBoard",allBoard);
 
         return mav;
     }
 
 
+    /**
+     *
+     * @param httpSession
+     * @return
+     * @throws Exception
+     *
+     * 글쓰기
+     */
     @RequestMapping(value = "/writeboard", method = RequestMethod.GET)
     public ModelAndView writeboard(HttpSession httpSession) throws Exception{
         ModelAndView mav = new ModelAndView("writeboard");
 
-        System.out.println("1");
         User user = (User) httpSession.getAttribute("member");
         int id = user.getId(); // ==> 0
 
         user = userService.selectOne(id);
-        System.out.println("user" + user);
+        log.info("user={}", user);
         mav.addObject("member",user);
-        System.out.println("3");
-
         return mav;
     }
 
