@@ -70,6 +70,14 @@ public class BoardApiController {
         return mav;
     }
 
+    /**
+     *
+     * @param params
+     * @return
+     * @throws Exception
+     *
+     * 글저장
+     */
     @RequestMapping(value = "/createpost", method = RequestMethod.POST)
     public Map<String, Object> createpost(@RequestBody Map<String,Object> params) throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
@@ -89,11 +97,19 @@ public class BoardApiController {
         return resultMap;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     *
+     * 글 상세보기
+기    */
     @RequestMapping(value = "boardDetail/{id}", method = RequestMethod.GET)
     public ModelAndView boardDetail(@PathVariable int id) throws Exception{
         ModelAndView mav = new ModelAndView("boardDetail");
 
-        System.out.println(id);
+        log.info("board 의 아이디={}", id);
         Board boarddetail = boardService.boardDetail(id);
 
         mav.addObject("baord", boarddetail);
@@ -103,12 +119,19 @@ public class BoardApiController {
         return mav;
     }
 
-    // 내가 쓴글 List
+    /**
+     *
+     * @param userId
+     * @return
+     * @throws Exception
+     *
+     * 내가 쓴 글 보기
+     */
     @RequestMapping(value = "myboardList/{userId}", method = RequestMethod.GET)
     public ModelAndView myboardList(@PathVariable String userId) throws Exception{
         ModelAndView mav = new ModelAndView("myboardList");
 
-        System.out.println("userid :" + userId);
+        log.info("userid={}", userId);
 
         List<Board> board = boardService.myboardList(userId);
 
@@ -118,11 +141,20 @@ public class BoardApiController {
     }
 
 
-    // 글 수정 페이지로 넘어가기
+    /**
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     *
+     * 수정 페이지로 넘어가기
+     */
     @RequestMapping(value = "editboard", method = RequestMethod.GET)
     public ModelAndView editboard(@RequestParam(value = "id") int id) throws Exception{
         ModelAndView mav = new ModelAndView("editboard");
-        System.out.println("PARAM : "+ id);
+
+        log.info("PARAM={}", id);
+
         Board board = boardService.boardDetail(id);
 
         mav.addObject("board",board);
@@ -130,15 +162,21 @@ public class BoardApiController {
         return mav;
     }
 
-    // 수정..
+    /**
+     *
+     * @param params
+     * @param id
+     * @return
+     * @throws Exception
+     *
+     * 수정처리
+     */
     @RequestMapping(value = "updateBoard/{boardid}",method = RequestMethod.PUT)
     public Map<String, Object> updateBoard(@RequestBody Map<String, Object> params, @PathVariable(value = "boardid") int id) throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
 
-//        int boardid = Integer.parseInt(String.valueOf(params.get("id")));
-//        System.out.println("수정!"+boardid);
-        System.out.println("pathVariable" +  id);
-        System.out.println("title==>" + String.valueOf(params.get("title")));
+        log.info("pathVariable={}",id);
+        log.info("title={}", String.valueOf(params.get("title")));
 
         Board board = new Board();
         board.setId(id);
@@ -148,7 +186,7 @@ public class BoardApiController {
         int result = boardService.updateBoard(board);
 
         if(result>0){
-            System.out.println("수정 성공!");
+            log.info("수정성공쓰");
             resultMap.put("success","성공");
 
         }else{
@@ -157,6 +195,14 @@ public class BoardApiController {
         return resultMap;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     *
+     * 글 삭제
+     */
     @RequestMapping(value = "/deleteBoard/{id}", method = RequestMethod.DELETE)
     public ModelAndView deleteBoard(@PathVariable int id) throws Exception{
         ModelAndView mav = new ModelAndView("allBoard");
