@@ -192,7 +192,7 @@ public class BoardApiController {
         }else{
             resultMap.put("fail","실패");
         }
-        return resultMap;
+        return resultMap; // 테스트
     }
 
     /**
