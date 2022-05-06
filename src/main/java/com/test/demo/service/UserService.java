@@ -17,5 +17,6 @@ public interface UserService {
     int deleteUser(int id) throws Exception;
     User checkLogin(User user) throws Exception;
     int checkId(String userId) throws Exception;
+    User getPw(String userId) throws Exception;
 
 }

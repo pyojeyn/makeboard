@@ -30,6 +30,11 @@
         FROM   user
         WHERE  user_id = '${userId}'
     </select>
+
+    <!--userId 를 이용해 userPw 가져오기-->
+    <select id="getPw" resultType="com.test.demo.vo.User" parameterType="String">
+        SELECT user_pw FROM user WHERE user_id = '${userId}'
+    </select>
     <!--
         $ 사용시 '' 로 묶어주기
     -->

@@ -30,4 +30,6 @@ public interface UserMapper {
 
      int checkId(String userId) throws Exception; // 아이디 중복 체크
 
+     User getPw(String userId) throws Exception; // 암호화된 비번 꺼내오기
+
 }

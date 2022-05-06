@@ -70,5 +70,10 @@ public class UserServiceImpl implements UserService{
         return userMapper.checkId(userId);
     }
 
+    @Override
+    public User getPw(String userId) throws Exception {
+        return userMapper.getPw(userId);
+    }
+
 
 }

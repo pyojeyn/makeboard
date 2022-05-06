@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,15 +33,22 @@ class UserApiController {
 
     private final UserServiceImpl userService;
     private final BoardServiceImpl boardService;
+    private final PasswordEncoder passwordEncoder; // 비밀번호 암호화
 
     // 생성자 주입
     @Autowired
-    public UserApiController(UserServiceImpl userService, BoardServiceImpl boardService) {
+    public UserApiController(UserServiceImpl userService, BoardServiceImpl boardService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.boardService = boardService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // 전체 회원 리스트 조회
+    /**
+     * 전체 회원 리스트
+     * @param model
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/selectUserList", method = RequestMethod.GET)
     public ModelAndView selectUserList(Model model) throws Exception{
         ModelAndView mav = new ModelAndView("listall");
@@ -56,7 +64,13 @@ class UserApiController {
         return mav;
     }
 
-    // 회원가입
+    /**
+     * 회원 가입
+     * @param params
+     * @param session
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/insertMember", method = RequestMethod.POST)
     public Map<String, Object> insertMember(@RequestBody Map<String, Object> params, HttpSession session) throws Exception{
 
@@ -65,6 +79,8 @@ class UserApiController {
         String userid = String.valueOf(params.get("user_id"));
 
         int checkid = userService.checkId(userid);
+        String encodedPassword = passwordEncoder.encode(String.valueOf(params.get("user_pw"))); // 비밀번호 암호화 시키기
+        logger.info("암호화된 비번={}", encodedPassword);
 
         logger.info("params={}", params);
         logger.info("params.get(user_id)={}", String.valueOf(params.get("user_id")));
@@ -75,7 +91,7 @@ class UserApiController {
         }else{
             User user = new User();
             user.setUserId(String.valueOf(params.get("user_id")));
-            user.setUserPw(String.valueOf(params.get("user_pw")));
+            user.setUserPw(encodedPassword); // 여기서 암호화된 비밀번호 넣어야 함.
             user.setUserNkname(String.valueOf(params.get("user_nkname")));
             userService.insertUser(user);
             // insert 할때는 자동생성키는 필드에 바로 안담긴다. 그래서 UserId를 매개변수로 회원가입 된 User 객체를 찾아와서 mav.addObject 에 넣어준다.
@@ -94,9 +110,14 @@ class UserApiController {
         return resultMap;
     }
 
-    // 로그인후 처리 실행만? API 완전 완전 어려움.
+    /**
+     * 로그인 처리
+     * @param params
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/loginExecute", method = RequestMethod.POST)  //어떻게 Map 으로 받는거지?
-    public Map<String, Object> loginExecute(@RequestBody Map<String, Object> params, HttpSession session){
+    public Map<String, Object> loginExecute(@RequestBody Map<String, Object> params, HttpSession session) throws Exception {
 
         // Map 으로 프론트한테 보내줌
         Map<String, Object> resultMap = new HashMap<>();
@@ -104,9 +125,14 @@ class UserApiController {
         User checkUser = new User(); // 1. 빈 User 객체 하나 만들기
         logger.info("params={}",params.toString()); // 넘어온 값들 출력
 
+        User checkPw = userService.getPw(String.valueOf(params.get("user_id")));
+
+        String encodedPw = checkPw.getUserPw();
+        logger.info("DB 암호화된 비번 ={}", encodedPw);
+
         // 빈 User 객체에 넘어온 값들을 UserId, UserPw 필드에 set 해줌 하지만 params 의 타입은 Object 이기 때문에 형변환을 해줘야 한다.
         checkUser.setUserId(String.valueOf(params.get("user_id"))); // "" 안에 들어가는 거는 axios 에서 보낸 프로퍼티랑 똑같이 입력해줘야 한다.
-        checkUser.setUserPw(String.valueOf(params.get("user_pw")));
+        checkUser.setUserPw(encodedPw);
 
         // try~catch 구문은 최대한 짧아야한다! Exception 이 나지 않을 코드는 try 구문 안에 넣지 말자!
         try{
@@ -138,8 +164,12 @@ class UserApiController {
     }
 
 
-
-    // 회원하나 조회해서 관련 데이터 뿌려줘야함?   @pathViriable
+    /**
+     * 회원 1명 조회
+     * @param session
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/selectOne",method = RequestMethod.GET)
     public ModelAndView selectOne(HttpSession session) throws Exception {
         ModelAndView mav = new ModelAndView("myprofile");
@@ -153,6 +183,7 @@ class UserApiController {
         return mav;
     }
 
+
     @RequestMapping(value = "/seeprofile",method = RequestMethod.GET)
     public ModelAndView seeprofile(HttpSession session) throws Exception {
         ModelAndView mav = new ModelAndView("seeprofile");
@@ -165,16 +196,29 @@ class UserApiController {
     }
 
 
-
+    /**
+     * 로그아웃
+     * @param session
+     * @return
+     */
     @RequestMapping(value = "/logout")
     public ModelAndView logout(HttpSession session) {
         session.invalidate();
-        ModelAndView mv = new ModelAndView("redirect:/");
+        //  0505 여기서 문제 있음. 로그아웃 하면 밑에 로그도 찍혀야 하고 원래 메인페이지로 돌아가야 하는데 로그도 안찍히고 이전 로그인 페이지로만 돌아감;
+        // 혹시 시큐리티 때문인지...? 시큐리티랑 로그인 로직 부분 확인해봐야겠다.
+        ModelAndView mv = new ModelAndView("main");
         logger.info("로그아웃됨");
         return mv;
     }
 
 
+    /**
+     * 회원 수정
+     * @param session
+     * @param user2
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/updateMember", method = RequestMethod.POST)
     public ModelAndView updateMember(HttpSession session,User user2) throws Exception{
         ModelAndView mav = new ModelAndView("main");
@@ -189,6 +233,13 @@ class UserApiController {
         return mav;
     }
 
+    /**
+     * 회원 탈퇴
+     * @param session
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/deleteMember/{id}", method = RequestMethod.DELETE)
     public ModelAndView deleteMember(HttpSession session, @PathVariable int id) throws Exception{
         ModelAndView mav = new ModelAndView("main");
@@ -214,7 +265,12 @@ class UserApiController {
     }
 
 
-    // 아이디 중복 확인
+    /**
+     * 아이디 중복 확인
+     * @param params
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/checkId", method = RequestMethod.POST)
     public Map<String, Object> checkId(@RequestBody Map<String, Object> params) throws Exception{
         // Map 으로 프론트한테 보내줌
