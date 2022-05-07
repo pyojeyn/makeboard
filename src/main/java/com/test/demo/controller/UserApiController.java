@@ -27,7 +27,7 @@ import java.util.Map;
 @RestController
 class UserApiController {
 
-    // 0507 다시 맥에서 푸쉬
+    // 후후후후후
     // 로그하기 위해서 , 팩토리 패턴
     private static Logger logger = LoggerFactory.getLogger(UserApiController.class);
 
