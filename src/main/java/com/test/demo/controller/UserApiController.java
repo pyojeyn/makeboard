@@ -79,7 +79,7 @@ class UserApiController {
 
         String userid = String.valueOf(params.get("user_id"));
 
-        int checkid = userService.checkId(userid);
+        int checkid = userService.checkId(userid); // 중복 아이디 있나 없나 체크하기 위해
         String encodedPassword = passwordEncoder.encode(String.valueOf(params.get("user_pw"))); // 비밀번호 암호화 시키기
         logger.info("암호화된 비번={}", encodedPassword);
 
@@ -98,6 +98,7 @@ class UserApiController {
             // insert 할때는 자동생성키는 필드에 바로 안담긴다. 그래서 UserId를 매개변수로 회원가입 된 User 객체를 찾아와서 mav.addObject 에 넣어준다.
             // 그래야 회원가입하고 main 페이지로 갈때 userId의 값을 담아서 화면에 출력해줄 수 있다.
             User checkUser = userService.checkUser(user.getUserId());
+
 
             // 세션 담아주기.
             session.setAttribute("member", checkUser);
@@ -126,14 +127,26 @@ class UserApiController {
         User checkUser = new User(); // 1. 빈 User 객체 하나 만들기
         logger.info("params={}",params.toString()); // 넘어온 값들 출력
 
+
         User checkPw = userService.getPw(String.valueOf(params.get("user_id")));
 
+        // 실제 DB에 있는 비밀번호
         String encodedPw = checkPw.getUserPw();
         logger.info("DB 암호화된 비번 ={}", encodedPw);
 
+        // 로그인 할때 입력한 비밀번호
+        String password = String.valueOf(params.get("user_pw"));
+        logger.info("실제로 입력한 비밀번호={}", password);
+
         // 빈 User 객체에 넘어온 값들을 UserId, UserPw 필드에 set 해줌 하지만 params 의 타입은 Object 이기 때문에 형변환을 해줘야 한다.
-        checkUser.setUserId(String.valueOf(params.get("user_id"))); // "" 안에 들어가는 거는 axios 에서 보낸 프로퍼티랑 똑같이 입력해줘야 한다.
-        checkUser.setUserPw(encodedPw);
+        // "" 안에 들어가는 거는 axios 에서 보낸 프로퍼티랑 똑같이 입력해줘야 한다.
+        // 진짜 비밀번호랑 입력한 비밀번호랑 일치하는지 비교!
+        if(passwordEncoder.matches(password, encodedPw)){
+            logger.info("비밀번호 일치함!");
+            checkUser.setUserId(String.valueOf(params.get("user_id")));
+            checkUser.setUserPw(encodedPw);
+        }
+
 
         // try~catch 구문은 최대한 짧아야한다! Exception 이 나지 않을 코드는 try 구문 안에 넣지 말자!
         try{
@@ -206,8 +219,8 @@ class UserApiController {
     public ModelAndView logout(HttpSession session) {
         session.invalidate();
         //  0505 여기서 문제 있음. 로그아웃 하면 밑에 로그도 찍혀야 하고 원래 메인페이지로 돌아가야 하는데 로그도 안찍히고 이전 로그인 페이지로만 돌아감;
-        // 혹시 시큐리티 때문인지...? 시큐리티랑 로그인 로직 부분 확인해봐야겠다.
-        ModelAndView mv = new ModelAndView("main");
+        // 혹시 시큐리티 때문인지...? 시큐리티랑 로그인 로직 부분 확인해봐야겠다. => 0507 해결함. 시큐리티 설정 때문 맞음 ;
+        ModelAndView mv = new ModelAndView("redirect:/");
         logger.info("로그아웃됨");
         return mv;
     }
