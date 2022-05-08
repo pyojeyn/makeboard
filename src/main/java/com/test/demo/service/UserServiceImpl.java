@@ -75,5 +75,15 @@ public class UserServiceImpl implements UserService{
         return userMapper.getPw(userId);
     }
 
+    @Override
+    public int changePassword(int id, String encodedNewPw) throws Exception {
+        return userMapper.changePassword(id, encodedNewPw);
+    }
+
+    @Override
+    public User forCheckPw(int Id) throws Exception {
+        return userMapper.forCheckPw(Id);
+    }
+
 
 }

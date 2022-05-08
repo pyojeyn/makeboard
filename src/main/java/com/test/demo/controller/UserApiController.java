@@ -304,6 +304,53 @@ class UserApiController {
         logger.info("checkId result={}", result);
         return resultMap;
     }
+
+    /**
+     * 비밀번호 변경 페이지 이동
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "/changePassword", method = RequestMethod.GET)
+    public ModelAndView changePassword(HttpSession session){
+        ModelAndView mav = new ModelAndView("changePassword");
+        User user = (User) session.getAttribute("member"); // userId를 넘겨주기 위해서
+        mav.addObject("member", user);
+        return mav;
+    }
+
+    /**
+     * 비밀번호 변경 로직
+     * @param params
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/changePassword/{userId}", method = RequestMethod.POST)
+    public Map<String, Object> changePassword(@RequestBody Map<String, Object> params, @PathVariable int userId) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        // 1. userId 로 user 객체 먼저 가져옴
+        User user = userService.forCheckPw(userId);
+
+        // 2. user객체.getUserPw 와 이전비밀번호에 실제로 입력한 값이 맞는지 일치해야함. matches
+        String originalPw = user.getUserPw(); // 실제 DB 에 저장되어있는 암호 ==> user객체.getUserPw
+        String oldPw = String.valueOf(params.get("old_pw")); // ==> 실제로 입력한 이전 비밀번호
+
+        if(passwordEncoder.matches(oldPw, originalPw)){
+            // 변경할 비밀번호 암호화 해서 변수에 담기
+            String encodedNewPw = passwordEncoder.encode(String.valueOf(params.get("new_pw")));
+            // 쿼리파라미터로 들어온 id 와 새로 입력한 비밀번호 암호화 한거 매개변수로 넣어서 mapper 단까지 보내줌
+            int result = userService.changePassword(userId, encodedNewPw);
+            if(result > 0){
+                resultMap.put("changemsg", "비밀번호가 정상적으로 변경되었습니다.");
+                resultMap.put("code", HttpStatus.OK.value());
+            }
+        }else{
+            resultMap.put("failmsg", "이전 비밀번호 일치하지 않음");
+            resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+        return resultMap;
+    }
 }
 
 

@@ -3,7 +3,6 @@ package com.test.demo.mapper;
 
 import com.test.demo.vo.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -31,5 +30,9 @@ public interface UserMapper {
      int checkId(String userId) throws Exception; // 아이디 중복 체크
 
      User getPw(String userId) throws Exception; // 암호화된 비번 꺼내오기
+
+     int changePassword(int id, String encodedNewPw) throws Exception;
+
+     User forCheckPw(int Id) throws Exception;
 
 }
