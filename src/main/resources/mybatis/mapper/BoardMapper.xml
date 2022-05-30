@@ -9,8 +9,8 @@
    </insert>
 
     <!--전체 게시물-->
-    <select id="allBoard" resultType="com.test.demo.vo.Board">
-        SELECT id,writer,title,content,board_regdate FROM board;
+    <select id="allBoard" parameterType="com.test.demo.vo.Board" resultType="com.test.demo.vo.Board">
+        SELECT id,writer,title,content,board_regdate FROM board ORDER BY id DESC LIMIT #{paginationInfo.firstRecordIndex} , #{recordsPerPage}
     </select>
 
     <!--해당 글보기-->
@@ -37,5 +37,12 @@
     <delete id="deleteBoardWithWriter" parameterType="String">
         DELETE FROM board WHERE writer = '${writer}'
     </delete>
+
+    <select id="selectBoardTotalCount" parameterType="com.test.demo.vo.Board" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            board
+    </select>
 
 </mapper>

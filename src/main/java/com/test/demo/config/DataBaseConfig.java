@@ -56,6 +56,8 @@ public class DataBaseConfig{
         factoryBean.setConfigLocation(applicationContext.getResource("classpath:/mybatis/mybatis-config.xml"));
         factoryBean.setMapperLocations(applicationContext.getResources("classpath:/mybatis/mapper/*Mapper.xml"));
 
+        factoryBean.setTypeAliasesPackage("com.test");
+
         return factoryBean;
     }
 

@@ -1,5 +1,6 @@
 package com.test.demo.controller;
 
+import com.test.demo.paging.Criteria;
 import com.test.demo.service.BoardService;
 import com.test.demo.service.BoardServiceImpl;
 import com.test.demo.service.UserServiceImpl;
@@ -38,10 +39,11 @@ public class BoardApiController {
      *
      * 게시판 리스트
      */
+    // @ModelAttribute를 이용하면 파라미터로 전달받은 객체를 자동으로 뷰까지 전달할 수 있다.
     @RequestMapping(value = "/allBoard", method = RequestMethod.GET)
-    public ModelAndView allBoard(Model model) throws Exception{
+    public ModelAndView allBoard(Model model, @ModelAttribute("params") Board params) throws Exception{
         ModelAndView mav = new ModelAndView("allBoard");
-        List<Board> allBoard = boardService.allBoard();
+        List<Board> allBoard = boardService.allBoard(params);
         log.info("boardService.allBoard()={}", allBoard);
         model.addAttribute("allBoard",allBoard);
 

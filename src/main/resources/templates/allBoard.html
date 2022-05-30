@@ -31,6 +31,20 @@
   </tr>
   </tbody>
 </table>
+<th:block layout:fragment="paging">
+  <nav th:replace = "fragments/common :: pagination"></nav>
+</th:block>
+<th:block layout:fragment="script">
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+
+    function movePage(uri, queryString) {
+      location.href = uri + queryString;
+    }
+
+    /*]]>*/
+  </script>
+</th:block>
 <button type="button" class="btn btn-info" th:onclick="|location.href='@{/}'|">메인</button>
 <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/writeboard}'|">글쓰기</button>
 </body>

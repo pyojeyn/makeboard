@@ -1,5 +1,6 @@
 package com.test.demo.mapper;
 
+import com.test.demo.paging.Criteria;
 import com.test.demo.vo.Board;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,7 +12,7 @@ public interface BoardMapper {
     int uploadBoard(Board board) throws Exception;
 
     // 게시판 list
-    List<Board> allBoard() throws Exception;
+    List<Board> allBoard(Board params) throws Exception;
 
     Board boardDetail(int id) throws Exception;
 
@@ -23,5 +24,7 @@ public interface BoardMapper {
 
     // writer 를 이용해서 글 삭제
     int deleteBoardWithWriter(String writer) throws Exception;
+
+    int selectBoardTotalCount(Board params) throws Exception;
 
 }

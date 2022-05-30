@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Board {
+public class Board  extends Common{
     private int id;
     private String writer;
     private String title;
