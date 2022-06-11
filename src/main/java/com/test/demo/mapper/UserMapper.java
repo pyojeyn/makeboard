@@ -5,6 +5,7 @@ import com.test.demo.vo.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 
 // DAO ?
@@ -14,6 +15,8 @@ public interface UserMapper {
      List<User> selectUserList() throws Exception;
 
      int insertUser(User user) throws Exception;
+
+     int insertCheckbox(Map<String, Object> checkboxes) throws Exception;
 
      User login(User user) throws Exception;
 

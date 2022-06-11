@@ -6,8 +6,9 @@
 <mapper namespace="com.test.demo.mapper.UserMapper">
     <!--회원가입-->
     <insert id="insertUser" parameterType="com.test.demo.vo.User">
-        insert into User(user_id,user_pw,user_nkname) values(#{userId},#{userPw},#{userNkname});
+        insert into User(user_id,user_pw,user_nkname,user_hobby) values(#{userId},#{userPw},#{userNkname}, #{userHobby});
     </insert>
+
     <!--로그인-->
     <select id="login" resultType="com.test.demo.vo.User">
         SELECT id,user_id, user_pw, user_nkname

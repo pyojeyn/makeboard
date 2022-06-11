@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /*
@@ -83,6 +81,10 @@ class UserApiController {
         String encodedPassword = passwordEncoder.encode(String.valueOf(params.get("user_pw"))); // 비밀번호 암호화 시키기
         logger.info("암호화된 비번={}", encodedPassword);
 
+        // 체크박스값 String 으로 형변환, "[", "]" , 공백 제거
+        String userhobbies = String.valueOf(params.get("user_hobby"));
+        userhobbies = userhobbies.replace("[", "").replace("]", "").replace(" ", "");
+
         logger.info("params={}", params);
         logger.info("params.get(user_id)={}", String.valueOf(params.get("user_id")));
         logger.info("checkid={}", checkid);
@@ -94,7 +96,10 @@ class UserApiController {
             user.setUserId(String.valueOf(params.get("user_id")));
             user.setUserPw(encodedPassword); // 여기서 암호화된 비밀번호 넣어야 함.
             user.setUserNkname(String.valueOf(params.get("user_nkname")));
+            user.setUserHobby(userhobbies);
+
             userService.insertUser(user);
+
             // insert 할때는 자동생성키는 필드에 바로 안담긴다. 그래서 UserId를 매개변수로 회원가입 된 User 객체를 찾아와서 mav.addObject 에 넣어준다.
             // 그래야 회원가입하고 main 페이지로 갈때 userId의 값을 담아서 화면에 출력해줄 수 있다.
             User checkUser = userService.checkUser(user.getUserId());

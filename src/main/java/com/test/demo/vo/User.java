@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,6 +18,7 @@ public class User {
     private String userId;
     private String userPw;
     private String userNkname;
+    private String userHobby;
     private LocalDate userRegdate;
 }
 

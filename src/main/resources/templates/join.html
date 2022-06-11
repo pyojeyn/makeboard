@@ -33,11 +33,13 @@
 <!--</html>-->
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
 </head>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
 <body>
 <!--<form method="post" action="/insertMember">-->
@@ -51,6 +53,28 @@
         <div class="form-group">
             <label for="inputAddress">userName</label>
             <input type="text" class="form-control" id="inputAddress" name="userNkname" placeholder="사용자 이름">
+        </div>
+        <div class="form-group">
+            <div><p style="font-weight: bold">취미</p></div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" id="jb-checkbox1" class="custom-control-input" name="userHobby" value="드라이브">
+                <label class="custom-control-label" for="jb-checkbox1">드라이브</label>
+
+                <input type="checkbox" id="jb-checkbox2" class="custom-control-input" name="userHobby" value="필라테스">
+                <label class="custom-control-label" for="jb-checkbox2">필라테스</label>
+
+                <input type="checkbox" id="jb-checkbox3" class="custom-control-input" name="userHobby" value="서핑">
+                <label class="custom-control-label" for="jb-checkbox3">서핑</label>
+
+                <input type="checkbox" id="jb-checkbox4" class="custom-control-input" name="userHobby" value="코딩">
+                <label class="custom-control-label" for="jb-checkbox4">코딩</label>
+
+                <input type="checkbox" id="jb-checkbox5" class="custom-control-input" name="userHobby" value="피아노">
+                <label class="custom-control-label" for="jb-checkbox5">피아노</label>
+
+                <input type="checkbox" id="jb-checkbox6" class="custom-control-input" name="userHobby" value="독서">
+                <label class="custom-control-label" for="jb-checkbox6">독서</label>
+            </div>
         </div>
         <div class="form-group">
             <label for="inputPassword4">password</label>
@@ -93,10 +117,16 @@
         let userpw = document.getElementById("inputPassword4").value;
         let usernkname = document.getElementById("inputAddress").value;
 
+        let chk_arr = [];
+        $("input[name=userHobby]:checked").each(function (){
+            let chk = $(this).val();
+            chk_arr.push(chk);
+        })
+
         // JSON.stringify 에는 body 로 못넣나봄..
         let body = {user_id : userid, user_pw : userpw, user_nkname:usernkname};
 
-        axios.post('/insertMember',JSON.stringify({user_id : userid, user_pw : userpw, user_nkname:usernkname}),{
+        axios.post('/insertMember',JSON.stringify({user_id : userid, user_pw : userpw, user_nkname:usernkname, user_hobby:chk_arr}),{
             headers: {
                 "Content-Type": `application/json`
             }
