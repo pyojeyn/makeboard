@@ -16,7 +16,6 @@ public interface UserMapper {
 
      int insertUser(User user) throws Exception;
 
-     int insertCheckbox(Map<String, Object> checkboxes) throws Exception;
 
      User login(User user) throws Exception;
 

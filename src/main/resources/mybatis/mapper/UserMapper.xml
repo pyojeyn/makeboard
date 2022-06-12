@@ -11,7 +11,7 @@
 
     <!--로그인-->
     <select id="login" resultType="com.test.demo.vo.User">
-        SELECT id,user_id, user_pw, user_nkname
+        SELECT id,user_id, user_pw, user_nkname, user_regdate, user_hobby
         FROM user
         WHERE user_id = #{userId}
           AND user_pw = #{userPw}
@@ -19,7 +19,7 @@
 
     <!--로그인 체크-->
     <select id="checkLogin" resultType="com.test.demo.vo.User">
-        SELECT id,user_id, user_pw, user_nkname
+        SELECT id,user_id, user_pw, user_nkname, user_regdate, user_hobby
         FROM user
         WHERE user_id = #{userId}
           AND user_pw = #{userPw}

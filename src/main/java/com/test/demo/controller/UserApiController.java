@@ -110,6 +110,8 @@ class UserApiController {
             session.setAttribute("userId", checkUser.getUserId());
             session.setAttribute("userPw", checkUser.getUserPw());
             session.setAttribute("userNkname", checkUser.getUserNkname());
+            session.setAttribute("userRegdate", checkUser.getUserRegdate());
+            session.setAttribute("userHobby", checkUser.getUserHobby());
 
             resultMap.put("done", "회원가입 성공임");
 
@@ -157,6 +159,7 @@ class UserApiController {
         try{
             // 로그인 수행 ( 유저 체크 )
             User loginUser = userService.login(checkUser);
+            logger.info("loginUser={}", loginUser);
 
             if(loginUser == null) { // 로그인 실패
                 resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 프로트단에 보낼 메세지
@@ -166,6 +169,9 @@ class UserApiController {
                 session.setAttribute("member", loginUser);
                 session.setAttribute("userId", loginUser.getUserId());
                 session.setAttribute("userPw", loginUser.getUserPw());
+                session.setAttribute("userHobby", loginUser.getUserHobby());
+                session.setAttribute("userRegdate", loginUser.getUserRegdate());
+
 
                 resultMap.put("code", HttpStatus.OK.value());
                 resultMap.put("log", "2");
@@ -210,6 +216,7 @@ class UserApiController {
         User user = (User) session.getAttribute("member");
         logger.info("seeprofile.selectOne={}", user);
         mav.addObject("member", user);
+        mav.addObject("userRegdate", user.getUserRegdate());
 
         return mav;
     }
