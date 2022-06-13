@@ -135,56 +135,71 @@ class UserApiController {
         logger.info("params={}",params.toString()); // 넘어온 값들 출력
 
 
-        User checkPw = userService.getPw(String.valueOf(params.get("user_id")));
+        int IsRightID = userService.checkId(String.valueOf(params.get("user_id")));
+        logger.info("isRigthID={}", IsRightID);
 
-        // 실제 DB에 있는 비밀번호
-        String encodedPw = checkPw.getUserPw();
-        logger.info("DB 암호화된 비번 ={}", encodedPw);
-
-        // 로그인 할때 입력한 비밀번호
-        String password = String.valueOf(params.get("user_pw"));
-        logger.info("실제로 입력한 비밀번호={}", password);
-
-        // 빈 User 객체에 넘어온 값들을 UserId, UserPw 필드에 set 해줌 하지만 params 의 타입은 Object 이기 때문에 형변환을 해줘야 한다.
-        // "" 안에 들어가는 거는 axios 에서 보낸 프로퍼티랑 똑같이 입력해줘야 한다.
-        // 진짜 비밀번호랑 입력한 비밀번호랑 일치하는지 비교!
-        if(passwordEncoder.matches(password, encodedPw)){
-            logger.info("비밀번호 일치함!");
-            checkUser.setUserId(String.valueOf(params.get("user_id")));
-            checkUser.setUserPw(encodedPw);
-        }
+        if(IsRightID < 1){
+            resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 프로트단에 보낼 메세지
+            resultMap.put("msg", "아이디 일치하지 않음.");
+            resultMap.put("log", "1");
+        }else{
+            User checkPw = userService.getPw(String.valueOf(params.get("user_id")));
 
 
-        // try~catch 구문은 최대한 짧아야한다! Exception 이 나지 않을 코드는 try 구문 안에 넣지 말자!
-        try{
-            // 로그인 수행 ( 유저 체크 )
-            User loginUser = userService.login(checkUser);
-            logger.info("loginUser={}", loginUser);
+            // 실제 DB에 있는 비밀번호
+            String encodedPw = checkPw.getUserPw();
+            logger.info("DB 암호화된 비번 ={}", encodedPw);
 
-            if(loginUser == null) { // 로그인 실패
-                resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 프로트단에 보낼 메세지
-                resultMap.put("msg", "로그인 실패했습니다.");
-                resultMap.put("log", "1");
-            } else {    //로그인 성공 mainpage 에서 session 값 받아서 값 출력
-                session.setAttribute("member", loginUser);
-                session.setAttribute("userId", loginUser.getUserId());
-                session.setAttribute("userPw", loginUser.getUserPw());
-                session.setAttribute("userHobby", loginUser.getUserHobby());
-                session.setAttribute("userRegdate", loginUser.getUserRegdate());
+            // 아이디 일치 여부
 
 
-                resultMap.put("code", HttpStatus.OK.value());
-                resultMap.put("log", "2");
+            // 로그인 할때 입력한 비밀번호
+            String password = String.valueOf(params.get("user_pw"));
+            logger.info("실제로 입력한 비밀번호={}", password);
+
+            // 빈 User 객체에 넘어온 값들을 UserId, UserPw 필드에 set 해줌 하지만 params 의 타입은 Object 이기 때문에 형변환을 해줘야 한다.
+            // "" 안에 들어가는 거는 axios 에서 보낸 프로퍼티랑 똑같이 입력해줘야 한다.
+            // 진짜 비밀번호랑 입력한 비밀번호랑 일치하는지 비교!
+            if(passwordEncoder.matches(password, encodedPw)){
+                logger.info("비밀번호 일치함!");
+                checkUser.setUserId(String.valueOf(params.get("user_id")));
+                checkUser.setUserPw(encodedPw);
             }
 
-        } catch (Exception e){
-            logger.info("로그인 오류 : " + e.getMessage());
-            resultMap.put("msg", e.getMessage());
-            // 이거 catch 밖에다 했는데 로그인안되고 3으로 넘어가네;
-            resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            resultMap.put("log", "3");
 
+            // try~catch 구문은 최대한 짧아야한다! Exception 이 나지 않을 코드는 try 구문 안에 넣지 말자!
+            try{
+                // 로그인 수행 ( 유저 체크 )
+                User loginUser = userService.login(checkUser);
+                logger.info("loginUser={}", loginUser);
+
+                if(loginUser == null) { // 로그인 실패
+                    resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 프로트단에 보낼 메세지
+                    resultMap.put("msg", "틀린 비밀번호입니다.");
+                    resultMap.put("log", "1");
+                } else {    //로그인 성공 mainpage 에서 session 값 받아서 값 출력
+                    session.setAttribute("member", loginUser);
+                    session.setAttribute("userId", loginUser.getUserId());
+                    session.setAttribute("userPw", loginUser.getUserPw());
+                    session.setAttribute("userHobby", loginUser.getUserHobby());
+                    session.setAttribute("userRegdate", loginUser.getUserRegdate());
+
+
+                    resultMap.put("code", HttpStatus.OK.value());
+                    resultMap.put("log", "2");
+                }
+
+            } catch (Exception e){
+                logger.info("로그인 오류 : " + e.getMessage());
+                resultMap.put("msg", e.getMessage());
+                // 이거 catch 밖에다 했는데 로그인안되고 3으로 넘어가네;
+                resultMap.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
+                resultMap.put("log", "3");
+
+            }
         }
+
+
         return resultMap;
     }
 
@@ -201,8 +216,9 @@ class UserApiController {
 
         // 0501 굳이 selectOne 하는 mapper 를 사용해야 하나? 그냥 세션으로 가져온 애를 그냥 mav 에 넘겨줘도 되지 않나?
         User user = (User) session.getAttribute("member"); // 세션에 있는 객체 받아와서 user 객체에 할당.
+        String userHobby = user.getUserHobby();
 
-        logger.info("selectOne={}", user);
+        mav.addObject("userHobby", userHobby);
         mav.addObject("member", user);
 
         return mav;

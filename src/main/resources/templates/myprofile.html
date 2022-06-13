@@ -11,7 +11,7 @@
         <h1>정보수정</h1>
         <th:block th:if="${member.getUserId() != null and member.getUserId() != ''}" >
 <!--            <input type="hidden" name="_method" th:value="put"/>-->
-
+            <p th:text="${member}"></p>
             <div class="form-group">
                 <!--pk hidden값으로 보냄-->
                 <input th:value="${member.getId()}" type="hidden" class="form-control" id="inputId" name="id" placeholder="사용자 아이디">
@@ -23,6 +23,28 @@
             <div class="form-group">
                 <label for="inputUserNkname">userName</label>
                 <input th:value="${member.getUserNkname()}" type="text" class="form-control" id="inputUserNkname" name="userNkname" placeholder="사용자 이름">
+            </div>
+            <div class="form-group">
+                <div><p style="font-weight: bold">취미</p></div>
+                <div class="custom-control custom-checkbox" id="hobbycheck">
+                    <input type="checkbox" id="hobby_0" class="custom-control-input" name="userHobby" value="0">
+                    <label class="custom-control-label" for="hobby_0">드라이브</label>
+
+                    <input type="checkbox" id="hobby_1" class="custom-control-input" name="userHobby" value="1">
+                    <label class="custom-control-label" for="hobby_1">필라테스</label>
+
+                    <input type="checkbox" id="hobby_2" class="custom-control-input" name="userHobby" value="2">
+                    <label class="custom-control-label" for="hobby_2">서핑</label>
+
+                    <input type="checkbox" id="hobby_3" class="custom-control-input" name="userHobby" value="3">
+                    <label class="custom-control-label" for="hobby_3">코딩</label>
+
+                    <input type="checkbox" id="hobby_4" class="custom-control-input" name="userHobby" value="4">
+                    <label class="custom-control-label" for="hobby_4">피아노</label>
+
+                    <input type="checkbox" id="hobby_5" class="custom-control-input" name="userHobby" value="5">
+                    <label class="custom-control-label" for="hobby_5">독서</label>
+                </div>
             </div>
         </th:block>
         <button type="submit" class="btn btn-primary">수정하기</button>
@@ -37,6 +59,12 @@
     console.log('queryselect of id : '+ pkid);
     console.log('getElementById : ' + pkid2);
 
+    window.onload = function(){
+        checkHobby();
+    }
+
+
+
     function deleteMember(){
 
         axios.delete(`/deleteMember/${pkid2}`)
@@ -47,6 +75,30 @@
             location.href = '/'
         })
 
+    }
+
+    function checkHobby(){
+        /*<![CDATA[*/
+
+        let userHobby = [[${userHobby}]]; // 백에서 넘어온 값
+        let userHobbyArr = userHobby.split(','); // 배열로 만들어 줌
+
+        let hobbyCheckValue =  document.getElementById("hobbycheck").getElementsByTagName("input"); // checkbox 의 input 요소들
+
+        let hobbyCheckValueArr = []; // input value 값 담긴 배열
+        for(let i=0; i<hobbyCheckValue.length; i++){
+            hobbyCheckValueArr[i] = hobbyCheckValue[i].value; // input의 value들을 담아서 배열 만들어줌.
+        }
+
+        for(let i=0; i<hobbyCheckValueArr.length; i++){
+            let hobbyindex =[];
+            hobbyindex[i] = hobbyCheckValueArr.indexOf(userHobbyArr[i]); // 실제 체크된 값이 있는 index 번호(hobbyCheckValueArr에서)를 담아줌
+            if(hobbyCheckValueArr.includes(userHobbyArr[i])){
+                hobbyCheckValue[hobbyindex[i]].checked = true;
+            }
+        }
+
+        /*]]>*/
     }
 </script>
 
