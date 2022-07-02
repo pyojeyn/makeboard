@@ -4,9 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.test.demo.mapper.BoardMapper">
    <!--글쓰기-->
-   <insert id="uploadBoard">
+   <insert id="uploadBoard" parameterType="com.test.demo.vo.Board">
+       <selectKey resultType="long" keyProperty="id" order="AFTER">
+           SELECT LAST_INSERT_ID()
+       </selectKey>
        insert into board (title,content,writer) values(#{title},#{content},#{writer});
    </insert>
+
+<!--    <insert id="uploadBoard" parameterType="com.test.demo.vo.Board" useGeneratedKeys="true" keyProperty="id">-->
+<!--        insert into board (title,content,writer) values(#{title},#{content},#{writer});-->
+<!--    </insert>-->
+
+    <select id="getBoardId" parameterType="String" resultType="Long">
+        select id from board WHERE content = #{content}
+    </select>
 
     <!--전체 게시물-->
     <select id="allBoard" parameterType="com.test.demo.vo.Board" resultType="com.test.demo.vo.Board">
