@@ -36,7 +36,7 @@
         SELECT
         <include refid="attachColumns" />
         FROM
-        tb_attach
+        board_file
         WHERE
         delete_yn = 'N'
         AND
@@ -44,7 +44,7 @@
     </select>
 
     <update id="deleteAttach" parameterType="long">
-        UPDATE tb_attach
+        UPDATE board_file
         SET
             delete_yn = 'Y'
           , delete_time = NOW()
@@ -56,22 +56,22 @@
         SELECT
         <include refid="attachColumns" />
         FROM
-        tb_attach
+        board_file
         WHERE
         delete_yn = 'N'
         AND
-        board_idx = #{boardId}
+        board_id = #{boardId}
     </select>
 
     <select id="selectAttachTotalCount" parameterType="long" resultType="int">
         SELECT
             COUNT(*)
         FROM
-            tb_attach
+            board_file
         WHERE
             delete_yn = 'N'
           AND
-            board_idx = #{boardId}
+            board_id = #{boardId}
     </select>
 
 </mapper>
