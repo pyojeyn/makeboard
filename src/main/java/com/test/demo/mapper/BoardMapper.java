@@ -14,6 +14,8 @@ public interface BoardMapper {
     // 게시판 list
     List<Board> allBoard(Board params) throws Exception;
 
+    int selectBoardTotalCount(Board params) throws Exception;
+
     Board boardDetail(int id) throws Exception;
 
     List<Board> myboardList(String userId) throws Exception;
@@ -25,6 +27,8 @@ public interface BoardMapper {
     // writer 를 이용해서 글 삭제
     int deleteBoardWithWriter(String writer) throws Exception;
 
-    int selectBoardTotalCount(Board params) throws Exception;
+    Long getBoardId(String content) throws Exception;
+
+
 
 }
