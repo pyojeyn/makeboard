@@ -5,11 +5,13 @@ import com.test.demo.service.BoardService;
 import com.test.demo.service.BoardServiceImpl;
 import com.test.demo.service.UserServiceImpl;
 import com.test.demo.vo.Board;
+import com.test.demo.vo.BoardFile;
 import com.test.demo.vo.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -72,31 +74,41 @@ public class BoardApiController {
         return mav;
     }
 
-    /**
-     *
-     * @param params
-     * @return
-     * @throws Exception
-     *
-     * 글저장
-     */
+//    /**
+//     *
+//     * @param params
+//     * @return
+//     * @throws Exception
+//     *
+//     * 글저장
+//     */
+//    @RequestMapping(value = "/createpost", method = RequestMethod.POST)
+//    public Map<String, Object> createpost(@RequestBody Map<String,Object> params, MultipartFile[] files) throws Exception{
+//        Map<String, Object> resultMap = new HashMap<>();
+//
+//        Board board = new Board();
+//
+//        board.setWriter(String.valueOf(params.get("writer")));
+//        board.setTitle(String.valueOf(params.get("title")));
+//        board.setContent(String.valueOf(params.get("content")));
+//
+//        boolean result = boardService.uploadBoard(board,files);
+//
+//        if(result){
+//          resultMap.put("msg","success");
+//        }
+//
+//        return resultMap;
+//    }
     @RequestMapping(value = "/createpost", method = RequestMethod.POST)
-    public Map<String, Object> createpost(@RequestBody Map<String,Object> params) throws Exception{
-        Map<String, Object> resultMap = new HashMap<>();
+    public ModelAndView createpost(Board boardParam, MultipartFile[] files) throws Exception{
+        ModelAndView mav = new ModelAndView("redirect:" + "/allBoard");
 
-        Board board = new Board();
-
-        board.setWriter(String.valueOf(params.get("writer")));
-        board.setTitle(String.valueOf(params.get("title")));
-        board.setContent(String.valueOf(params.get("content")));
-
-        int result = boardService.uploadBoard(board);
-
-        if(result > 0){
-          resultMap.put("msg","success");
+        boolean result = boardService.uploadBoard(boardParam,files);
+        if(result){
+            return mav;
         }
-
-        return resultMap;
+        return null;
     }
 
     /**
@@ -108,7 +120,7 @@ public class BoardApiController {
      * 글 상세보기
 기    */
     @RequestMapping(value = "boardDetail/{id}", method = RequestMethod.GET)
-    public ModelAndView boardDetail(@PathVariable int id) throws Exception{
+    public ModelAndView boardDetail(@PathVariable int  id) throws Exception{
         ModelAndView mav = new ModelAndView("boardDetail");
 
         log.info("board 의 아이디={}", id);
@@ -154,12 +166,20 @@ public class BoardApiController {
     @RequestMapping(value = "editboard", method = RequestMethod.GET)
     public ModelAndView editboard(@RequestParam(value = "id") int id) throws Exception{
         ModelAndView mav = new ModelAndView("editboard");
-
+        log.info("!11");
         log.info("PARAM={}", id);
 
         Board board = boardService.boardDetail(id);
+        log.info("22");
 
+        // int 에서 Long 으로 형변환
+        Long boardId = Long.valueOf(id);
+        log.info("33");
+
+        List<BoardFile> fileList = boardService.getAttachFileList(boardId);
+        mav.addObject("fileList", fileList);
         mav.addObject("board",board);
+        log.info("44");
 
         return mav;
     }
@@ -173,8 +193,8 @@ public class BoardApiController {
      *
      * 수정처리
      */
-    @RequestMapping(value = "updateBoard/{boardid}",method = RequestMethod.PUT)
-    public Map<String, Object> updateBoard(@RequestBody Map<String, Object> params, @PathVariable(value = "boardid") int id) throws Exception{
+    @RequestMapping(value = "updateBoard/{boardid}",method = RequestMethod.POST)
+    public Map<String, Object> updateBoard(@RequestBody Map<String, Object> params, @PathVariable(value = "boardid") Long id) throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
 
         log.info("pathVariable={}",id);
