@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmls:th="http://www.thymeleaf.org" xmlns:xmls="http://www.w3.org/1999/xhtml">
 <head>
+        <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+<!--    0703 범인은 여기 있다.!!-->
     <meta charset="UTF-8">
     <title>글수정</title>
     <style>
@@ -13,27 +16,67 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <body>
-    <div class="container">
-        <input type="hidden" name="id" id="id" th:value="${board.getId()}"/>
-        <div class="mb-3">
-            <label for="writer">작성자</label>
-            <span th:text="${board.getWriter()}" name="writer" id="writer"></span>
-        </div>
-<!--        <p>작성자 : <span th:text="${board.getWriter()}" name="writer" id="writer"></span></p>-->
-        <div class="mb-3">
-            <label for="writer">제목</label>
-            <input type="text" class="form-control" name="title" id="title" th:value="${board.getTitle()}"/>
-        </div>
-<!--        <p>제목  :  <input type="text" name="title" id="title" th:value="${board.getTitle()}"/> </p>-->
-        <div class="mb-3">
-            <label for="content">내용</label>
-            <textarea class="form-control" rows="5" name="content" id="content" th:text="${board.getContent()}" placeholder="내용을 입력해 주세요" ></textarea>
-        </div>
-<!--        <div style="margin-bottom: 10px"> -->
-<!--            <textarea name="content" id="content" th:value="${board.getContent()}" rows="4" cols="50" ></textarea>-->
-<!--        </div>-->
-        <button type="button" class="btn btn-sm btn-primary" id="btnSave" onclick="updateboard()">수정하기</button>
+<div class="container">
+    <!--        <form class="form-horizontal" th:action = "@{/updateBoard/{boardid}(boardid=${board.getId()})}" method="post" enctype="multipart/form-data" >-->
+    <input type="hidden" name="id" id="id" th:value="${board.getId()}"/>
+    <div class="mb-3">
+        <label for="writer">작성자</label>
+        <span th:text="${board.getWriter()}" name="writer" id="writer"></span>
     </div>
+    <!--        <p>작성자 : <span th:text="${board.getWriter()}" name="writer" id="writer"></span></p>-->
+    <div class="mb-3">
+        <label for="writer">제목</label>
+        <input type="text" class="form-control" name="title" id="title" th:value="${board.getTitle()}"/>
+    </div>
+    <!--        <p>제목  :  <input type="text" name="title" id="title" th:value="${board.getTitle()}"/> </p>-->
+    <div class="mb-3">
+        <label for="content">내용</label>
+        <textarea class="form-control" rows="5" name="content" id="content" th:text="${board.getContent()}" placeholder="내용을 입력해 주세요" ></textarea>
+    </div>
+    <!--        <div style="margin-bottom: 10px"> -->
+    <!--            <textarea name="content" id="content" th:value="${board.getContent()}" rows="4" cols="50" ></textarea>-->
+    <!--        </div>-->
+    <!--        <button type="button" class="btn btn-sm btn-primary" id="btnSave" onclick="updateboard()">수정하기</button>-->
+
+
+    <!--            &lt;!&ndash;/* 저장된 파일이 없는 파일 영역 */&ndash;&gt;-->
+    <!--            <div th:if="${#lists.isEmpty( fileList )}" data-name="fileDiv" class="form-group filebox bs3-primary">-->
+    <!--                <label for="file_0" class="col-sm-2 control-label">파일1</label>-->
+    <!--                <div class="col-sm-10">-->
+    <!--                    <input type="text" class="upload-name" value="파일 찾기" readonly />-->
+    <!--                    <label for="file_0" class="control-label">찾아보기</label>-->
+    <!--                    <input type="file" name="files" id="file_0" class="upload-hidden" onchange="changeFilename(this)" />-->
+
+    <!--                    <button type="button" onclick="addFile()" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">-->
+    <!--                        <i class="fa fa-plus" aria-hidden="true"></i>-->
+    <!--                    </button>-->
+    <!--                    <button type="button" onclick="removeFile(this)" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">-->
+    <!--                        <i class="fa fa-minus" aria-hidden="true"></i>-->
+    <!--                    </button>-->
+    <!--                </div>-->
+    <!--            </div>-->
+
+    <!--            &lt;!&ndash;/* 저장된 파일이 있는 파일 영역 */&ndash;&gt;-->
+    <!--            <div th:unless="${#lists.isEmpty( fileList )}" th:each="row, status : ${fileList}" data-name="fileDiv" class="form-group filebox bs3-primary">-->
+    <!--                <label th:for="|file_${status.index}|" class="col-sm-2 control-label">[[ |파일${status.count}| ]]</label>-->
+    <!--                <div class="col-sm-10">-->
+    <!--                    <input type="hidden" name="fileIdxs" th:value="${row.idx}" />-->
+    <!--                    <input type="text" class="upload-name" th:value="${row.originalName}" readonly />-->
+    <!--                    <label th:for="|file_${status.index}|" class="control-label">찾아보기</label>-->
+    <!--                    <input type="file" name="files" th:id="|file_${status.index}|" class="upload-hidden" onchange="changeFilename(this)" />-->
+
+    <!--                    <button th:if="${status.first}" type="button" onclick="addFile()" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">-->
+    <!--                        <i class="fa fa-plus" aria-hidden="true"></i>-->
+    <!--                    </button>-->
+    <!--                    <button type="button" onclick="removeFile(this)" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">-->
+    <!--                        <i class="fa fa-minus" aria-hidden="true"></i>-->
+    <!--                    </button>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <button type="button" class="btn btn-sm btn-primary" id="btnSave">수정하기</button>
+
+    <!--    </form>-->
+</div>
 
 <!--    <button type="button" onclick="updateboard()">수정하기</button>-->
 

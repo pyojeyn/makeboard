@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class Board  extends Common{
-    private int id;
+    private Long id;
     private String writer;
     private String title;
     private String content;

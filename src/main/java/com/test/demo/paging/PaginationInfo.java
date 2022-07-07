@@ -2,7 +2,9 @@ package com.test.demo.paging;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Setter
 public class PaginationInfo {
@@ -66,6 +68,10 @@ public class PaginationInfo {
 
         /* 페이지 리스트의 첫 페이지 번호 */
         firstPage = ((criteria.getCurrentPageNo() - 1) / criteria.getPageSize()) * criteria.getPageSize() + 1;
+                 /* ( (현재 페이지 번호 - 1) / 화면 하단의 페이지 개수 ) * 화면 하단의 페이지 개수 + 1 */
+        /* 현재 페이지 번호가 15, 화면 하단의 페이지 개수가 10 이라고 가정*/
+        log.info("첫번째 페이지={}", 14 / 10 * 10 + 1); // 아무리 계산해봐도 15인데 왜 11이죠
+
 
         /* 페이지 리스트의 마지막 페이지 번호 (마지막 페이지가 전체 페이지 수보다 크면 마지막 페이지에 전체 페이지 수를 저장) */
         lastPage = firstPage + criteria.getPageSize() - 1;
@@ -76,7 +82,7 @@ public class PaginationInfo {
         /* SQL의 조건절에 사용되는 첫 RNUM */
         firstRecordIndex = (criteria.getCurrentPageNo() - 1) * criteria.getRecordsPerPage();
 
-        /* SQL의 조건절에 사용되는 마지막 RNUM */
+        /* SQL의 조건절에 사용되는 마지막 RNUM  오라클 DB 에서 사용 , 현재 사용 X*/
         lastRecordIndex = criteria.getCurrentPageNo() * criteria.getRecordsPerPage();
 
         /* 이전 페이지 존재 여부 */

@@ -2,14 +2,16 @@ package com.test.demo.vo;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
 public class BoardFile extends Common{
 
     /** 파일 번호 (PK) */
-    private Long id;
+    private int id;
 
     /** 게시글 번호 (FK) */
     private Long boardId;

@@ -101,7 +101,13 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Long getBoardId(String content) throws Exception {
-        return boardMapper.getBoardId(content);
+    public List<BoardFile> getAttachFileList(Long boardId) {
+        int fileTotalCount = boardFileMapper.selectAttachTotalCount(boardId);
+        if (fileTotalCount < 1) {
+            return Collections.emptyList();
+        }
+        return boardFileMapper.selectAttachList(boardId);
     }
+
+
 }

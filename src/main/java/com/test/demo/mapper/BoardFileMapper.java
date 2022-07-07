@@ -15,5 +15,5 @@ public interface BoardFileMapper {
 
     public List<BoardFile> selectAttachList(Long boardIdx);
 
-    public int selectAttachTotalCount(Long boardIdx);
+    public int selectAttachTotalCount(Long boardId);
 }
