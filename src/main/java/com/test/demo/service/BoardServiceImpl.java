@@ -103,6 +103,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public List<BoardFile> getAttachFileList(Long boardId) {
         int fileTotalCount = boardFileMapper.selectAttachTotalCount(boardId);
+        log.info("fileTotalCount={}", fileTotalCount);
         if (fileTotalCount < 1) {
             return Collections.emptyList();
         }

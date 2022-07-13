@@ -163,11 +163,12 @@ public class BoardApiController {
      *
      * 수정 페이지로 넘어가기
      */
-    @RequestMapping(value = "editboard", method = RequestMethod.GET)
+    @RequestMapping(value = "/editboard", method = RequestMethod.GET)
     public ModelAndView editboard(@RequestParam(value = "id") int id) throws Exception{
         ModelAndView mav = new ModelAndView("editboard");
         log.info("!11");
         log.info("PARAM={}", id);
+
 
         Board board = boardService.boardDetail(id);
         log.info("22");
@@ -176,10 +177,14 @@ public class BoardApiController {
         Long boardId = Long.valueOf(id);
         log.info("33");
 
+
+
         List<BoardFile> fileList = boardService.getAttachFileList(boardId);
         mav.addObject("fileList", fileList);
         mav.addObject("board",board);
         log.info("44");
+        log.info("fileList={}", fileList);
+        log.info("board={}", board);
 
         return mav;
     }
