@@ -63,7 +63,7 @@
 
     <!--/* 저장된 파일이 있는 파일 영역 */-->
     <!--    <div th:unless="${#lists.isEmpty( fileList )}" th:each="row, status : ${fileList}" data-name="fileDiv" class="form-group filebox bs3-primary">-->
-    <!--        <label th:for="|file_${status.index}|" class="col-sm-2 control-label">[[ |파일${status.count}| ]]</label>-->
+    <!--        <label th:for="|file_${status.index}|" class="col-sm-2 control-label"></label>-->
     <!--        <div class="col-sm-10">-->
     <!--            <input type="hidden" name="fileIdxs" th:value="${row.idx}" />-->
     <!--            <input type="text" class="upload-name" th:value="${row.originalName}" readonly />-->
