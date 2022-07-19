@@ -43,41 +43,44 @@
 
 
 
-<!--원인 찾음 0713 : 이 밑에것들 때문인데 이게 주석을 해도 이 코드의 존재만으로도 에러가 나는듯; 어이무-->
+
     <!--/* 저장된 파일이 없는 파일 영역 */-->
-    <!--    <div th:if="${#lists.isEmpty( fileList )}" data-name="fileDiv" class="form-group filebox bs3-primary">-->
-    <!--        <label for="file_0" class="col-sm-2 control-label">파일1</label>-->
-    <!--        <div class="col-sm-10">-->
-    <!--            <input type="text" class="upload-name" value="파일 찾기" readonly />-->
-    <!--            <label for="file_0" class="control-label">찾아보기</label>-->
-    <!--            <input type="file" name="files" id="file_0" class="upload-hidden" onchange="changeFilename(this)" />-->
+        <div th:if="${#lists.isEmpty( fileList )}" data-name="fileDiv" class="form-group filebox bs3-primary">
+            <label for="file_0" class="col-sm-2 control-label">파일1</label>
+            <div class="col-sm-10">
+                <input type="text" class="upload-name" value="파일 찾기" readonly />
+                <label for="file_0" class="control-label">찾아보기</label>
+                <input type="file" name="files" id="file_0" class="upload-hidden" onchange="changeFilename(this)" />
 
-    <!--            <button type="button" onclick="addFile()" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">-->
-    <!--                <i class="fa fa-plus" aria-hidden="true"></i>-->
-    <!--            </button>-->
-    <!--            <button type="button" onclick="removeFile(this)" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">-->
-    <!--                <i class="fa fa-minus" aria-hidden="true"></i>-->
-    <!--            </button>-->
-    <!--        </div>-->
-    <!--    </div>-->
+                <button type="button" onclick="addFile()" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+                <button type="button" onclick="removeFile(this)" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
 
+    <!--원인 찾음 0719 : 이 밑에것들 때문인데 69번째 줄의 row.idx 가 아니라 row.id였음 -->
     <!--/* 저장된 파일이 있는 파일 영역 */-->
-    <!--    <div th:unless="${#lists.isEmpty( fileList )}" th:each="row, status : ${fileList}" data-name="fileDiv" class="form-group filebox bs3-primary">-->
-    <!--        <label th:for="|file_${status.index}|" class="col-sm-2 control-label"></label>-->
-    <!--        <div class="col-sm-10">-->
-    <!--            <input type="hidden" name="fileIdxs" th:value="${row.idx}" />-->
-    <!--            <input type="text" class="upload-name" th:value="${row.originalName}" readonly />-->
-    <!--            <label th:for="|file_${status.index}|" class="control-label">찾아보기</label>-->
-    <!--            <input type="file" name="files" th:id="|file_${status.index}|" class="upload-hidden" onchange="changeFilename(this)" />-->
+        <div th:unless="${#lists.isEmpty( fileList )}" th:each="row, status : ${fileList}" data-name="fileDiv" class="form-group filebox bs3-primary">
+            <label th:for="|file_${status.index}|" class="col-sm-2 control-label">[[ |파일${status.count}| ]]</label>
+            <div class="col-sm-10">
+                <p>row.id 다 0으로 나오는데 이렇게 되면 곤란함. 파일 일일히 수정을 못함 </p>
+                <p th:text="${row.idx}"></p>
+                <input type="hidden" name="fileIdxs" th:value="${row.idx}" />
+                <input type="text" class="upload-name" th:value="${row.originalName}" readonly />
+                <label th:for="|file_${status.index}|" class="control-label">찾아보기</label>
+                <input type="file" name="files" th:id="|file_${status.index}|" class="upload-hidden" onchange="changeFilename(this)" />
 
-    <!--            <button th:if="${status.first}" type="button" onclick="addFile()" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">-->
-    <!--                <i class="fa fa-plus" aria-hidden="true"></i>-->
-    <!--            </button>-->
-    <!--            <button type="button" onclick="removeFile(this)" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">-->
-    <!--                <i class="fa fa-minus" aria-hidden="true"></i>-->
-    <!--            </button>-->
-    <!--        </div>-->
-    <!--    </div>-->
+                <button th:if="${status.first}" type="button" onclick="addFile()" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+                <button type="button" onclick="removeFile(this)" class="btn btn-bordered btn-xs visible-xs-inline visible-sm-inline visible-md-inline visible-lg-inline">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
 
 
 

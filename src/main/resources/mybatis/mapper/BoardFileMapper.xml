@@ -20,8 +20,8 @@
         ) VALUES
         <foreach collection="list" item="item" separator=",">
             (
-            #{item.id}
-            , #{item.boardId}
+               #{item.idx}
+            ,  #{item.boardId}
             , #{item.originalName}
             , #{item.saveName}
             , #{item.size}

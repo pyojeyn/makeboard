@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class BoardFile extends Common{
 
     /** 파일 번호 (PK) */
-    private int id;
+    private int idx;
 
     /** 게시글 번호 (FK) */
     private Long boardId;
