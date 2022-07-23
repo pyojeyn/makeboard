@@ -25,8 +25,8 @@ public class FileUtils {
     private final String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
 
     /** 업로드 경로 */
-//    private final String uploadPath = Paths.get("upload", today).toString(); ===> 원인은 이거였다. 왜 맥은 Paths.get 이 안되는것인가. 시간 날때 Path 에 관해서 공부해야 함.
-    private final String uploadPath = "/Users/jennyboo/Documents/demo/upload/";
+    //private final String uploadPath = Paths.get("upload", today).toString(); //===> 원인은 이거였다. 왜 맥은 Paths.get 이 안되는것인가. 시간 날때 Path 에 관해서 공부해야 함.
+    private final String uploadPath = "C:/makeboard/upload/";
 
     /**
      * 서버에 생성할 파일명을 처리할 랜덤 문자열 반환
@@ -82,7 +82,6 @@ public class FileUtils {
                 attach.setOriginalName(file.getOriginalFilename());
                 attach.setSaveName(saveName);
                 attach.setSize(file.getSize());
-                log.info("attach={}", attach);
 
                 /* 파일 정보 추가 */
                 attachList.add(attach);
